@@ -16,9 +16,6 @@ class CreateClientsTable extends Migration {
 				$table->increments('id');
 				$table->integer('user_id')->unsigned();
 				$table->integer('company_id')->unsigned();
-				// $table->foreign('company_id')->references('id')->on('companies');
-				// $table->integer('office_id')->unsigned()->default(0);
-				// $table->foreign('office_id')->references('id')->on('offices');
 				$table->string('name')->unique();
 				$table->string('phone')->nullable();
 				$table->string('mobile')->nullable();

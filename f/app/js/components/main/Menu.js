@@ -126,7 +126,7 @@ module.exports = React.createClass({
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link to={'/main/office/2'}>
+                                    <Link to={'/main/career/2'}>
                                         <i className='fa'></i>
                                         <span>職業</span>
                                     </Link>

@@ -16,7 +16,7 @@ module.exports = React.createClass({
                     break;
                 case 'group':
                 case 'industry':
-                case 'office':
+                case 'career':
                     TagActionCreators({
                         type: this.props.type
                     }).data(this.props.type);
@@ -70,7 +70,7 @@ module.exports = React.createClass({
                 break;
             case 'group':
             case 'industry':
-            case 'office':
+            case 'career':
                 data = TagStore.getData(type, 'select');
                 break;
         }

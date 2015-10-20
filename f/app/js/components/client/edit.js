@@ -52,9 +52,9 @@ module.exports = React.createClass({
                                 </div>
                                 <div className="col-sm-6">
                                     <div className="form-group">
-                                        <label htmlFor="office" className="col-sm-2 control-label">職位</label>
+                                        <label htmlFor="career" className="col-sm-2 control-label">職位</label>
                                         <div className="col-sm-10">
-                                            <Select type="office" ref="office" value={this.state.data.length && this.state.data[0].office.length ? this.state.data[0].office[0].id : ''} handleChange={this.handleChange} />
+                                            <Select type="career" ref="career" value={this.state.data.length && this.state.data[0].career.length ? this.state.data[0].career[0].id : ''} handleChange={this.handleChange} />
                                         </div>
                                     </div>
                                 </div>

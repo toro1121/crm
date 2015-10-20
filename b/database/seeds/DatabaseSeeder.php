@@ -117,7 +117,7 @@ class TagTableSeeder extends Seeder {
 		));
 
 		Tag::create(array(
-			'type' => 'office',
+			'type' => 'career',
 			'parent_id' => 2,
 			'name' => '職業'
 		));
@@ -139,17 +139,17 @@ class TagTableSeeder extends Seeder {
 		));
 
 		Tag::create(array(
-			'type' => 'office',
+			'type' => 'career',
 			'parent_id' => 2,
 			'name' => '總經理'
 		));
 		Tag::create(array(
-			'type' => 'office',
+			'type' => 'career',
 			'parent_id' => 2,
 			'name' => '工程師'
 		));
 		Tag::create(array(
-			'type' => 'office',
+			'type' => 'career',
 			'parent_id' => 2,
 			'name' => '助理'
 		));

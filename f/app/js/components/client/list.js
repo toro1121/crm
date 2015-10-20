@@ -22,7 +22,7 @@ module.exports = React.createClass({
             render: (val, row) => (<a href="javascript:void(0)" onClick={this.handleClick.bind(this, 'link', row.company)}>{row.company ? row.company.name : ''}</a>)
         }, {
             title: '職位',
-            render: (val, row) => (<a href="javascript:void(0)" onClick={this.handleClick.bind(this, 'link', row.office)}>{row.office.length ? row.office[0].name : ''}</a>)
+            render: (val, row) => (<a href="javascript:void(0)" onClick={this.handleClick.bind(this, 'link', row.career)}>{row.career.length ? row.career[0].name : ''}</a>)
         }, {
             title: '電話',
             prop: 'phone'

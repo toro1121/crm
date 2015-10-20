@@ -89,7 +89,7 @@ var o = _COMMON.storageLoad('tag') ? _COMMON.storageLoad('tag') : {
             filterValue: {}
         }
     },
-    office: {
+    career: {
         data: {
             all: [],
             filter: [],
@@ -137,7 +137,7 @@ o.industry.config.filter = {
         }
     }
 }
-o.office.config.filter = {
+o.career.config.filter = {
     search: {
         filter: function(a, b) {
             a = (a + '').toLowerCase().trim();
@@ -169,6 +169,10 @@ var Store = assign({}, EventEmitter.prototype, {
                         message: o.message,
                         data: o[type].data.one
                     };
+                    if (arg2) {
+                        v.bool = null;
+                        v.message = null;
+                    }
             }
         }
         return v;
@@ -240,7 +244,7 @@ var Store = assign({}, EventEmitter.prototype, {
     dispatch: function(action) {
         var TYPE = action.actionType.split(/\_/)[1];
         var type = TYPE.toLowerCase();
-        if (!type.match(/group|item|industry|office/)) {
+        if (!type.match(/group|item|industry|career/)) {
             return;
         }
 

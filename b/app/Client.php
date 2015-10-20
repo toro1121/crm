@@ -14,7 +14,7 @@ class Client extends Model {
 		return $this->belongsTo('App\Company');
 	}
 
-	public function office() {
+	public function career() {
 		return $this->morphToMany('App\Tag', 'taggable')->where('type', __FUNCTION__);
 	}
 

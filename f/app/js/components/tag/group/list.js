@@ -10,8 +10,7 @@ var TagStore = require('../../../stores/TagStore');
 //jsx
 var DataTable = require('../../element/DataTable');
 
-// TODO: try merge all about tag components.
-// TODO: 顯示子分類數量
+// TODO: 子分類數量style
 module.exports = React.createClass({
     mixins: [ReactRouter.History],
     getInitialState: function() {
@@ -27,7 +26,14 @@ module.exports = React.createClass({
         };
         o.config.columns = [{
             title: '名稱',
-            prop: 'name'
+            prop: 'name',
+            render: (val, row) => (
+                <div>
+                    {row.name}
+                    &nbsp;&nbsp;
+                    ( {row.child.length} )
+                </div>
+            )
         }, {
             title: '顏色',
             prop: 'color',

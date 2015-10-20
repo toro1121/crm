@@ -21,7 +21,7 @@ class Company extends Model {
 	public function tag() {
 		return $this->morphToMany('App\Tag', 'taggable')->where('type', '!=', array(
 			'industry',
-			'office'
+			'career'
 		));
 	}
 

@@ -46,9 +46,9 @@ module.exports = React.createClass({
 	                            </div>
                             	<div className="col-sm-6">
 		                            <div className="form-group">
-		                                <label htmlFor="office" className="col-sm-2 control-label">職位</label>
+		                                <label htmlFor="career" className="col-sm-2 control-label">職位</label>
 		                                <div className="col-sm-10">
-		                                	<Select type="office" ref="office" />
+		                                	<Select type="career" ref="career" />
 		                                </div>
 		                            </div>
 	                            </div>

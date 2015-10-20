@@ -42,7 +42,7 @@ module.exports = React.createClass({
                             tmp[key].name = '產業';
                             tmp[key].params = 1;
                             break;
-                        case 'office':
+                        case 'career':
                             tmp[key].name = '職業';
                             tmp[key].params = 2;
                             break;

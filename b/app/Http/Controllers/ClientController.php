@@ -18,7 +18,7 @@ class ClientController extends ApiController {
 	 * @return Response
 	 */
 	public function index() {
-		$this->res['data'] = Client::with('user', 'company', 'office', 'tag')->get();
+		$this->res['data'] = Client::with('user', 'company', 'career', 'tag')->get();
 		return $this->res;
 	}
 
@@ -39,8 +39,8 @@ class ClientController extends ApiController {
 	public function store() {
 		$data = Input::all();
 		$tag = explode(',', $data['tag']);
-		$tag = array_merge(array($data['office']), $tag[0] ? $tag : array());
-		unset($data['office'], $data['tag']);
+		$tag = array_merge(array($data['career']), $tag[0] ? $tag : array());
+		unset($data['career'], $data['tag']);
 
 		$client = new Client;
 		foreach($data as $key => $value) {
@@ -69,7 +69,7 @@ class ClientController extends ApiController {
 	 * @return Response
 	 */
 	public function show($id) {
-		$this->res['data'] = Client::with('user', 'company', 'office', 'tag')->where('id', $id)->get();
+		$this->res['data'] = Client::with('user', 'company', 'career', 'tag')->where('id', $id)->get();
 		return $this->res;
 	}
 
@@ -92,8 +92,8 @@ class ClientController extends ApiController {
 	public function update($id) {
 		$data = Input::all();
 		$tag = explode(',', $data['tag']);
-		$tag = array_merge(array($data['office']), $tag[0] ? $tag : array());
-		unset($data['office'], $data['tag']);
+		$tag = array_merge(array($data['career']), $tag[0] ? $tag : array());
+		unset($data['career'], $data['tag']);
 
 		$client = Client::find($id);
 		foreach($data as $key => $value) {
@@ -106,7 +106,7 @@ class ClientController extends ApiController {
 			$this->res = array(
 				'bool' => TRUE,
 				'message' => 'success!',
-				'data' => Client::with('company', 'office', 'tag')->where('id', $id)->get()
+				'data' => Client::with('company', 'career', 'tag')->where('id', $id)->get()
 			);
 		}
 		else {

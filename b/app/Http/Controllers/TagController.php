@@ -24,7 +24,7 @@ class TagController extends ApiController {
 
 	public function group($id = FALSE) {
 		return $this->data(function() {
-			$this->res['data'] = Tag::with('user')->whereRaw('parent_id = id')->where('type', NULL)->get();
+			$this->res['data'] = Tag::with('user', 'child')->whereRaw('parent_id = id')->where('type', NULL)->get();
 		}, $id);
 	}
 
@@ -38,7 +38,7 @@ class TagController extends ApiController {
 		return $this->item($parent_id, $id);
 	}
 
-	public function office($parent_id, $id = FALSE) {
+	public function career($parent_id, $id = FALSE) {
 		return $this->item($parent_id, $id);
 	}
 

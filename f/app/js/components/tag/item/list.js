@@ -16,15 +16,6 @@ module.exports = React.createClass({
         var type = this.props.location.pathname.split(/\//)[2] == 'tag' ? 'item' : this.props.location.pathname.split(/\//)[2];
         var o = TagStore.getData(type, 'list');
         o.type = type;
-        var style = function(color) {
-            return {
-                width: '100%',
-                height: '30px',
-                background: '#' + color,
-                borderRadius: '3px',
-                display: 'table'
-            };
-        };
         o.config.columns = [{
             title: '名稱',
             prop: 'name'
@@ -32,9 +23,7 @@ module.exports = React.createClass({
             title: '顏色',
             prop: 'color',
             width: 30,
-            render: (val, row) => (
-                <div style={style(val)}></div>
-            )
+            render: (val, row) => (<div style={{width:'100%',height:'30px',background:'#'+row.color,borderRadius:'3px',display:'table'}}></div>)
         } : false, {
             title: '修改時間',
             prop: 'updated_at'
@@ -61,11 +50,7 @@ module.exports = React.createClass({
     },
     componentWillReceiveProps: function() {
         setTimeout(function() {
-            var o = this.state;
-            o.type = this.props.location.pathname.split(/\//)[2] == 'tag' ? 'item' : this.props.location.pathname.split(/\//)[2];
-            this.setState(o);
-
-            TagActionCreators.data(this.state.type, false, this.props.params.parent_id);
+            TagActionCreators.data(this.props.location.pathname.split(/\//)[2] == 'tag' ? 'item' : this.props.location.pathname.split(/\//)[2], false, this.props.params.parent_id);
         }.bind(this), 1);
     },
     componentWillMount: function() {
@@ -90,9 +75,12 @@ module.exports = React.createClass({
         );
     },
     handleChange: function() {
-        var o = TagStore.getData(this.state.type, 'list');
-        o.type = this.state.type;
-        this.setState(o);
+        var type = this.props.location.pathname.split(/\//)[2] == 'tag' ? 'item' : this.props.location.pathname.split(/\//)[2];
+        this.setState({
+            type: type,
+            config: this.state.config,
+            data: TagStore.getData(type, 'list').data
+        });
     },
     handleClick: function(type, id, e) {
         switch (type) {

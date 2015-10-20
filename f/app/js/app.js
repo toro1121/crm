@@ -92,6 +92,7 @@ var Client = require('./components/client/list');
 var ClientAdd = require('./components/client/add');
 var ClientEdit = require('./components/client/edit');
 var Company = require('./components/company/list');
+var CompanyPage = require('./components/company/page');
 var CompanyAdd = require('./components/company/add');
 var CompanyEdit = require('./components/company/edit');
 var TagGroup = require('./components/tag/group/list');
@@ -120,6 +121,7 @@ React.render((
                 <Route path="client/edit/:id" component={ClientEdit} />
 
                 <Route path="company" component={Company} />
+                <Route path="company/:id" component={CompanyPage} />
                 <Route path="company/add" component={CompanyAdd} />
                 <Route path="company/edit/:id" component={CompanyEdit} />
 
@@ -133,9 +135,9 @@ React.render((
                 <Route path="industry/:parent_id" component={TagItem} />
                 <Route path="industry/:parent_id/add" component={TagItemAdd} />
                 <Route path="industry/:parent_id/edit/:id" component={TagItemEdit} />
-                <Route path="office/:parent_id" component={TagItem} />
-                <Route path="office/:parent_id/add" component={TagItemAdd} />
-                <Route path="office/:parent_id/edit/:id" component={TagItemEdit} />
+                <Route path="career/:parent_id" component={TagItem} />
+                <Route path="career/:parent_id/add" component={TagItemAdd} />
+                <Route path="career/:parent_id/edit/:id" component={TagItemEdit} />
 
                 <Route path="*" component={MainNotFound} />
             </Route>

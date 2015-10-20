@@ -36,7 +36,7 @@ Route::group(array('prefix' => 'api'), function() {
 			Route::get('group/{id?}', 'TagController@group');
 			Route::get('item/{parent_id}/{id?}', 'TagController@item');
 			Route::get('industry/{id?}', 'TagController@industry');
-			Route::get('office/{id?}', 'TagController@office');
+			Route::get('career/{id?}', 'TagController@career');
 		});
 		Route::resource('tag', 'TagController');
 	});
