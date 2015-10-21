@@ -12,7 +12,7 @@ module.exports = {
         var tmp = {};
         for (var key in data) {
             var x = data[key].getDOMNode();
-            if (data[key].getDOMNode().tagName.match(/INPUT|SELECT/)) {
+            if (data[key].getDOMNode().tagName.match(/INPUT|SELECT|TEXTAREA/)) {
                 tmp[key] = x.value.trim();
             } else {
                 x = $(x).find('input,select');

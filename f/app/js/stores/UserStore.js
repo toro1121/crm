@@ -13,6 +13,7 @@ var UserActionCreators = require('../actions/UserActionCreators');
 //custom
 var _CONFIG = require('../config');
 
+var timer = false;
 var o = {
     bool: null,
     message: null,
@@ -106,8 +107,12 @@ var Store = assign({}, EventEmitter.prototype, {
                 o.profile.data = action.res.data;
 
                 //一分鐘檢查一次登入狀態
+                if (timer) {
+                    clearTimeout(timer);
+                    timer = false;
+                }
                 if (o.profile.status) {
-                    setTimeout(function() {
+                    timer = setTimeout(function() {
                         UserActionCreators.userStatus();
                     }, 60000);
                 }
@@ -121,7 +126,7 @@ var Store = assign({}, EventEmitter.prototype, {
                 //檢查登入狀態
                 UserActionCreators.userStatus();
                 Store.emitChange('status');
-                // return true;
+                return true;
             case AppConstants.USER_REGISTER:
             case AppConstants.USER_FORGET:
                 o.bool = action.res.bool;

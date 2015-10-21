@@ -25,9 +25,21 @@ module.exports = React.createClass({
                             break;
                         case 'company':
                             tmp[key].name = '公司';
+                            if (data.length > 2 && data[key + 1].match(/page/)) {
+                                data.splice(key + 1, 1, 'companyPage');
+                            }
+                            break;
+                        case 'companyPage':
+                            tmp[key].name = require('../../stores/CompanyStore').getDataById(data[key + 1])[0].name;
                             break;
                         case 'client':
                             tmp[key].name = '客戶';
+                            if (data.length > 2 && data[key + 1].match(/page/)) {
+                                data.splice(key + 1, 1, 'clientPage');
+                            }
+                            break;
+                        case 'clientPage':
+                            tmp[key].name = require('../../stores/ClientStore').getDataById(data[key + 1])[0].name;
                             break;
                         case 'tag':
                             tmp[key].name = '標籤';

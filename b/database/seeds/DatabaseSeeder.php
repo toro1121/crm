@@ -33,16 +33,16 @@ class UserTableSeeder extends Seeder {
 
 	public function run() {
 		User::create(array(
+			'username' => 'demo@demo.com',
+			'password' => Hash::make('demo@demo.com'),
+			'name' => 'Demo',
+			'email' => 'demo@demo.com',
+		));
+		User::create(array(
 			'username' => 'toro731121@gmail.com',
 			'password' => Hash::make('12345678'),
 			'name' => 'gmail',
 			'email' => 'toro731121@gmail.com',
-		));
-		User::create(array(
-			'username' => 'lee.toro@msa.hinet.net',
-			'password' => Hash::make('12345678'),
-			'name' => 'hinet',
-			'email' => 'lee.toro@msa.hinet.net',
 		));
 	}
 
@@ -76,7 +76,7 @@ class ClientTableSeeder extends Seeder {
 			'name' => 'Leo Lee',
 			'phone' => '02-26272257',
 			'mobile' => '0952209992',
-			'mail' => 'toro731121@gmail.com',
+			'email' => 'toro731121@gmail.com',
 			'remark' => '我是leo',
 		));
 		Client::create(array(
@@ -84,24 +84,27 @@ class ClientTableSeeder extends Seeder {
 			'name' => 'David Hua',
 			'phone' => '26272373',
 			'mobile' => '0935111111',
-			'mail' => 'david@gmail.com',
+			'email' => 'david@gmail.com',
 			'remark' => '我是大衛',
 		));
 		Client::create(array(
 			'company_id' => 1,
 			'name' => 'Jordan',
-			'mail' => 'jordan@gmail.com',
+			'email' => 'jordan@gmail.com',
 			'remark' => 'I\'m Jordan.',
 		));
 		Client::create(array(
 			'name' => 'Change',
-			'mail' => 'change@gmail.com',
+			'email' => 'change@gmail.com',
 			'remark' => 'I\'m Change.',
 		));
 		Client::create(array(
 			'company_id' => 3,
 			'name' => '小花',
-			'mail' => 'flower@gmail.com',
+			'ename' => 'flower',
+			'mobile' => '0952111111',
+			'email' => 'flower@gmail.com',
+			'address' => '新北市新莊區中正路800號'
 		));
 	}
 
@@ -137,6 +140,11 @@ class TagTableSeeder extends Seeder {
 			'parent_id' => 1,
 			'name' => '製造業'
 		));
+		Tag::create(array(
+			'type' => 'industry',
+			'parent_id' => 1,
+			'name' => '金融業'
+		));
 
 		Tag::create(array(
 			'type' => 'career',
@@ -146,7 +154,17 @@ class TagTableSeeder extends Seeder {
 		Tag::create(array(
 			'type' => 'career',
 			'parent_id' => 2,
+			'name' => '資深工程師'
+		));
+		Tag::create(array(
+			'type' => 'career',
+			'parent_id' => 2,
 			'name' => '工程師'
+		));
+		Tag::create(array(
+			'type' => 'career',
+			'parent_id' => 2,
+			'name' => '設計師'
 		));
 		Tag::create(array(
 			'type' => 'career',
@@ -156,7 +174,7 @@ class TagTableSeeder extends Seeder {
 		//
 		for($i = 1; $i <= 5; $i++) {
 			Tag::create(array(
-				'parent_id' => $i + 8,
+				'parent_id' => $i + 11,
 				'name' => "test{$i}",
 				'color' => sprintf('%06x', rand(0, 16777215))
 			));

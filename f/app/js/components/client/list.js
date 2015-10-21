@@ -16,13 +16,14 @@ module.exports = React.createClass({
         var o = ClientStore.getData('list');
         o.config.columns = [{
             title: '姓名',
-            prop: 'name'
+            prop: 'name',
+            render: (val, row) => (<Link to={'/main/client/page/' + row.id}>{row.name}</Link>)
         }, {
             title: '公司',
-            render: (val, row) => (<a href="javascript:void(0)" onClick={this.handleClick.bind(this, 'link', row.company)}>{row.company ? row.company.name : ''}</a>)
+            render: (val, row) => (row.company ? <Link to={'/main/company/page/' + row.company.id}>{row.company.name}</Link> : '')
         }, {
             title: '職位',
-            render: (val, row) => (<a href="javascript:void(0)" onClick={this.handleClick.bind(this, 'link', row.career)}>{row.career.length ? row.career[0].name : ''}</a>)
+            render: (val, row) => (row.career.length ? <Link to={'/main/client?id=' + row.career[0].id}>{row.career[0].name}</Link> : '')
         }, {
             title: '電話',
             prop: 'phone'
@@ -31,7 +32,8 @@ module.exports = React.createClass({
             prop: 'mobile'
         }, {
             title: 'Mail',
-            prop: 'mail'
+            prop: 'email',
+            render: (val, row) => (<a href={'mailto:' + row.email}>{row.email}</a>)
         }, {
             title: '標籤',
             className: 'tag',
@@ -110,7 +112,6 @@ module.exports = React.createClass({
                 this.history.pushState(null, '/main/client/edit/' + id);
                 break;
             case 'del':
-                // FIXME: 也需要刪除標籤記錄
                 AppActionCreators.modal(id == 'all' && !this.state.data.checkbox.length ? {
                     display: true,
                     message: '請先勾選欲刪除項目!',
@@ -132,8 +133,6 @@ module.exports = React.createClass({
                 break;
             case 'checkbox':
                 ClientActionCreators.checkbox(id, e);
-                break;
-            case 'link':
                 break;
             case 'tag':
                 if (this.state.data.checkbox.length) {

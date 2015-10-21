@@ -55,7 +55,7 @@ var Store = assign({}, EventEmitter.prototype, {
                 };
                 break;
             case 'select':
-                v = o.data.page;
+                v = o.data.all;
                 break;
             default:
                 v = {
@@ -103,6 +103,21 @@ var Store = assign({}, EventEmitter.prototype, {
                 if (i) {
                     o.data.filter = filter(o.config.filter, o.config.filterValue, o.data.all);
                 }
+
+                //
+                if (action.res.tagId) {
+                    var tmp = [];
+                    for (var i in o.data.filter) {
+                        for (var j in o.data.filter[i].industry) {
+                            if (o.data.filter[i].industry[j].id == action.res.tagId) {
+                                tmp.push(o.data.filter[i]);
+                                break;
+                            }
+                        }
+                    }
+                    o.data.filter = tmp;
+                }
+
                 if (o.data.checkbox.length) {
                     var checkbox = [];
                     for (var i = 0; i < o.data.all.length; i++) {

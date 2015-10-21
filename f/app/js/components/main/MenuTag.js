@@ -39,6 +39,15 @@ module.exports = React.createClass({
                 }
             };
         }
+
+        //無標籤數量
+        var tmp = require('../../stores/ClientStore').getData('select');
+        var noneTagNum = 0;
+        for (var i in tmp) {
+            if (!tmp[i].tag.length) {
+                noneTagNum++;
+            }
+        }
         return (
             // TODO: 直接更改標籤顏色
             <ul className="sidebar-menu tag">
@@ -50,6 +59,13 @@ module.exports = React.createClass({
                     <button className="btn btn-default">
                         <i className="fa fa-star"></i>
                     </button>
+                </li>
+                <li>
+                    <i className="fa"></i>
+                    <span>
+                        <Link to={'/main/client?id=none'} style={{color:'#999'}}>(無標籤)</Link>
+                    </span>
+                    <small className="label pull-right" style={{background:'#ccc'}}>{noneTagNum}</small>
                 </li>
                 {data.map(function(value, key){
                     var style = s('#' + value.color);

@@ -15,12 +15,17 @@ class CreateCompaniesTable extends Migration {
 			Schema::create('companies', function(Blueprint $table) {
 				$table->increments('id')->unsigned();
 				$table->integer('user_id')->unsigned();
-				// $table->integer('industry_id')->unsigned()->default(0);
-				// $table->foreign('industry_id')->references('id')->on('industries');
 				$table->string('name')->unique();
+				$table->string('ename')->nullable();
+				$table->string('sname')->nullable();
+				$table->string('number')->nullable();
+				$table->string('capital')->nullable();
+				$table->string('scale')->nullable();		
 				$table->string('phone')->nullable();
-				// $table->string('mobile')->nullable();
-				$table->string('mail')->nullable();
+				$table->string('fax')->nullable();
+				$table->string('email')->nullable();
+				$table->string('website')->nullable();
+				$table->string('address')->nullable();
 				$table->text('remark')->nullable();
 				$table->timestamps();
 			});

@@ -49,22 +49,13 @@ var Store = assign({}, EventEmitter.prototype, {
         var v;
         switch (arg1) {
             case 'list':
-                // if (arg2) {
-                //     var tmp = [];
-                //     for (var i in o.data.filter) {
-                //         for (var j in o.data.filter[i].tag) {
-                //             if (o.data.filter[i].tag[j].id == arg2) {
-                //                 tmp.push(o.data.filter[i]);
-                //                 break;
-                //             }
-                //         }
-                //     }
-                //     o.data.filter = tmp;
-                // }
                 v = {
                     config: o.config,
                     data: o.data
                 };
+                break;
+            case 'select':
+                v = o.data.all;
                 break;
             default:
                 v = {
@@ -117,10 +108,21 @@ var Store = assign({}, EventEmitter.prototype, {
                 if (action.res.tagId) {
                     var tmp = [];
                     for (var i in o.data.filter) {
-                        for (var j in o.data.filter[i].tag) {
-                            if (o.data.filter[i].tag[j].id == action.res.tagId) {
-                                tmp.push(o.data.filter[i]);
-                                break;
+                        //無標籤時
+                        if (action.res.tagId == 'none' && !o.data.filter[i].tag.length) {
+                            tmp.push(o.data.filter[i]);
+                        } else {
+                            for (var j in o.data.filter[i].tag) {
+                                if (o.data.filter[i].tag[j].id == action.res.tagId) {
+                                    tmp.push(o.data.filter[i]);
+                                    break;
+                                }
+                            }
+                            for (var j in o.data.filter[i].career) {
+                                if (o.data.filter[i].career[j].id == action.res.tagId) {
+                                    tmp.push(o.data.filter[i]);
+                                    break;
+                                }
                             }
                         }
                     }

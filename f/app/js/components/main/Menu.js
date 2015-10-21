@@ -4,12 +4,6 @@ var Link = require('react-router').Link;
 var MenuTag = require('./MenuTag');
 
 module.exports = React.createClass({
-    getInitialState: function() {
-        // TODO: menu object
-        return {
-            menu: ['客戶管理', '公司管理', '標籤管理']
-        };
-    },
     // TODO: jquery => react
     componentDidMount: function() {
         $(function() {

@@ -34,11 +34,11 @@ class TagController extends ApiController {
 		}, $id, $parent_id);
 	}
 
-	public function industry($parent_id, $id = FALSE) {
+	public function industry($parent_id = 1, $id = FALSE) {
 		return $this->item($parent_id, $id);
 	}
 
-	public function career($parent_id, $id = FALSE) {
+	public function career($parent_id = 2, $id = FALSE) {
 		return $this->item($parent_id, $id);
 	}
 

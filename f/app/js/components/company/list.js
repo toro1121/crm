@@ -1,5 +1,6 @@
 var React = require('react');
 var ReactRouter = require('react-router');
+var Link = ReactRouter.Link;
 //action
 var AppActionCreators = require('../../actions/AppActionCreators')({});
 var CompanyActionCreators = require('../../actions/CompanyActionCreators');
@@ -14,16 +15,17 @@ module.exports = React.createClass({
         var o = CompanyStore.getData('list');
         o.config.columns = [{
             title: '名稱',
-            prop: 'name'
+            prop: 'name',
+            render: (val, row) => (<Link to={'/main/company/page/' + row.id}>{row.name}</Link>)
         }, {
             title: '產業',
-            render: (val, row) => (<a href="javascript:void(0)" onClick={this.handleClick.bind(this, 'link', row.industry)}>{row.industry.length ? row.industry[0].name : ''}</a>)
+            render: (val, row) => (row.industry.length ? <Link to={'/main/company?id=' + row.industry[0].id}>{row.industry[0].name}</Link> : '')
         }, {
             title: '電話',
             prop: 'phone'
         }, {
-            title: 'Mail',
-            prop: 'mail'
+            title: '地址',
+            prop: 'address'
         }, {
             title: '修改時間',
             prop: 'updated_at'
@@ -42,9 +44,14 @@ module.exports = React.createClass({
         };
         return o;
     },
+    componentWillReceiveProps: function() {
+        setTimeout(function() {
+            CompanyActionCreators.data(false, this.props.location.query.id);
+        }.bind(this), 1);
+    },
     componentWillMount: function() {
         CompanyStore.addChangeListener(this.handleChange);
-        CompanyActionCreators.data();
+        CompanyActionCreators.data(false, this.props.location.query.id);
     },
     componentWillUnmount: function() {
         CompanyStore.removeChangeListener(this.handleChange);
@@ -96,8 +103,6 @@ module.exports = React.createClass({
                 break;
             case 'checkbox':
                 CompanyActionCreators.checkbox(id, e);
-                break;
-            case 'link':
                 break;
         }
     }

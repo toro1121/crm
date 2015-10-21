@@ -31,7 +31,7 @@ var Control = React.createClass({
             class: 'btn-default',
             fn: function() {
                 this.props.handleClick('back', false);
-            }
+            }.bind(this)
         }];
         var button = [];
 

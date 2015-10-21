@@ -11,7 +11,7 @@ module.exports = React.createClass({
     render: function() {
         return (
             <div className="wrapper">
-                <Header />
+                <Header state={this.props.state} />
                 <Menu />
                 <div className="content-wrapper">
                     <ContentHeader routes={this.props.routes} location={this.props.location} />

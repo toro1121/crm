@@ -11,6 +11,7 @@ var _COMMON = require('../../common');
 //jsx
 var Select = require('../element/Select');
 var ReactSelect = require('../element/ReactSelect');
+var ReactDropzone = require('../element/ReactDropzone');
 
 module.exports = React.createClass({
     mixins: [ReactRouter.History],
@@ -36,54 +37,73 @@ module.exports = React.createClass({
 						</div>
 						<form className="form-horizontal" onSubmit={this.handleSubmit}>
 							<div className="box-body">
-								<div className="col-sm-6">
+								<div className="col-sm-3">
 									<div className="form-group">
-		                                <label htmlFor="company_id" className="col-sm-2 control-label">公司</label>
-		                                <div className="col-sm-10">
+		                                <label htmlFor="company_id" className="col-sm-4 control-label">公司</label>
+		                                <div className="col-sm-8">
 			                                <Select type="company_id" ref="company_id" />
 		                                </div>
 		                            </div>
 	                            </div>
-                            	<div className="col-sm-6">
+                            	<div className="col-sm-3">
 		                            <div className="form-group">
-		                                <label htmlFor="career" className="col-sm-2 control-label">職位</label>
-		                                <div className="col-sm-10">
+		                                <label htmlFor="career" className="col-sm-4 control-label">職位</label>
+		                                <div className="col-sm-8">
 		                                	<Select type="career" ref="career" />
 		                                </div>
 		                            </div>
 	                            </div>
-								<div className="col-sm-6">
+								<div className="col-sm-3">
 									<div className="form-group">
-										<label htmlFor="name" className="col-sm-2 control-label">姓名</label>
-										<div className="col-sm-10">
+										<label htmlFor="name" className="col-sm-4 control-label">
+											<span className="require">*</span>
+											姓名
+										</label>
+										<div className="col-sm-8">
 											<input type="text" className="form-control" id="name" placeholder="姓名" ref="name" />
 										</div>
 									</div>
 								</div>
-								<div className="col-sm-6">
+								<div className="col-sm-3">
 									<div className="form-group">
-										<label htmlFor="phone" className="col-sm-2 control-label">電話</label>
-										<div className="col-sm-10">
+										<label htmlFor="ename" className="col-sm-4 control-label">英文名</label>
+										<div className="col-sm-8">
+											<input type="text" className="form-control" id="ename" placeholder="英文名" ref="ename" />
+										</div>
+									</div>
+								</div>
+								<div className="col-sm-3">
+									<div className="form-group">
+										<label htmlFor="phone" className="col-sm-4 control-label">電話</label>
+										<div className="col-sm-8">
 											<input type="text" className="form-control" id="phone" placeholder="電話" ref="phone" />
 										</div>
 									</div>
 								</div>
-								<div className="col-sm-6">
+								<div className="col-sm-3">
 									<div className="form-group">
-										<label htmlFor="mobile" className="col-sm-2 control-label">手機</label>
-										<div className="col-sm-10">
+										<label htmlFor="mobile" className="col-sm-4 control-label">手機</label>
+										<div className="col-sm-8">
 											<input type="text" className="form-control" id="mobile" placeholder="手機" ref="mobile" />
 										</div>
 									</div>
 								</div>
 								<div className="col-sm-6">
 									<div className="form-group">
-										<label htmlFor="mail" className="col-sm-2 control-label">Mail</label>
+										<label htmlFor="email" className="col-sm-2 control-label">Email</label>
 										<div className="col-sm-10">
-											<input type="mail" className="form-control" id="mail" placeholder="Mail" ref="mail" />
+											<input type="mail" className="form-control" id="email" placeholder="Email" ref="email" />
 										</div>
 									</div>
 								</div>
+								<div className="col-sm-12">
+                                    <div className="form-group">
+                                        <label htmlFor="address" className="col-sm-1 control-label">地址</label>
+                                        <div className="col-sm-11">
+                                            <input type="text" className="form-control" id="address" placeholder="地址" ref="address" />
+                                        </div>
+                                    </div>
+                                </div>
 								<div className="col-sm-12">
 									<div className="form-group">
 	                                    <label htmlFor="tag" className="col-sm-1 control-label">標籤</label>
@@ -93,6 +113,19 @@ module.exports = React.createClass({
 	                                </div>
                                 </div>
 							</div>
+							{/*
+							//TODO: 新增名片
+							<div className="box-footer">
+                                <div className="col-sm-12">
+                                    <div className="form-group">
+                                        <label htmlFor="remark" className="col-sm-1 control-label">名片</label>
+                                        <div className="col-sm-11">
+                                            <ReactDropzone id={'tmp'} />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            */}
 							<div className="box-footer">
 								<div className="col-sm-12">
 									<div className="form-group">

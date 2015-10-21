@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\Company;
+use App\Taggable;
 use Input;
 
 class CompanyController extends ApiController {
@@ -122,6 +123,8 @@ class CompanyController extends ApiController {
 	 */
 	public function destroy($id) {
 		Company::whereIn('id', Input::get('id'))->delete();
+		//刪除tag關聯記錄
+		Taggable::whereIn('taggable_id', Input::get('id'))->where('taggable_type', 'App\Company')->delete();
 		return $this->index();
 	}
 

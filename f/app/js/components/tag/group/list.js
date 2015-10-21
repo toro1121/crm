@@ -1,5 +1,6 @@
 var React = require('react');
 var ReactRouter = require('react-router');
+var Link = ReactRouter.Link;
 //action
 var AppActionCreators = require('../../../actions/AppActionCreators')({});
 var TagActionCreators = require('../../../actions/TagActionCreators')({
@@ -10,7 +11,6 @@ var TagStore = require('../../../stores/TagStore');
 //jsx
 var DataTable = require('../../element/DataTable');
 
-// TODO: 子分類數量style
 module.exports = React.createClass({
     mixins: [ReactRouter.History],
     getInitialState: function() {
@@ -28,11 +28,11 @@ module.exports = React.createClass({
             title: '名稱',
             prop: 'name',
             render: (val, row) => (
-                <div>
+                <Link to={'/main/tag/' + 'row.id'}>
                     {row.name}
                     &nbsp;&nbsp;
-                    ( {row.child.length} )
-                </div>
+                    <span style={{color:'#ccc'}}>( {row.child.length} )</span>
+                </Link>
             )
         }, {
             title: '顏色',

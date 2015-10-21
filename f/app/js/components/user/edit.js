@@ -10,6 +10,7 @@ var _COMMON = require('../../common');
 //jsx
 var ReactDropzone = require('../element/ReactDropzone');
 
+// FIXME: modal自動跳出問題
 module.exports = React.createClass({
     mixins: [ReactRouter.History],
     getInitialState: function() {

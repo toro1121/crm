@@ -161,7 +161,7 @@ var Store = assign({}, EventEmitter.prototype, {
                     };
                     break;
                 case 'select':
-                    v = o[type].data.page;
+                    v = o[type].data.all;
                     break;
                 default:
                     v = {

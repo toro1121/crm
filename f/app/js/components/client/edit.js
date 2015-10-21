@@ -11,6 +11,7 @@ var _COMMON = require('../../common');
 //jsx
 var Select = require('../element/Select');
 var ReactSelect = require('../element/ReactSelect');
+var ReactDropzone = require('../element/ReactDropzone');
 
 module.exports = React.createClass({
     mixins: [ReactRouter.History],
@@ -42,51 +43,70 @@ module.exports = React.createClass({
                         <form className="form-horizontal" onSubmit={this.handleSubmit}>
                             <input type="hidden" ref="id" value={this.state.data.length ? this.state.data[0].id : ''} />
                             <div className="box-body">
-                                <div className="col-sm-6">
+                                <div className="col-sm-3">
                                     <div className="form-group">
-                                        <label htmlFor="company_id" className="col-sm-2 control-label">公司</label>
-                                        <div className="col-sm-10">
+                                        <label htmlFor="company_id" className="col-sm-4 control-label">公司</label>
+                                        <div className="col-sm-8">
                                             <Select type="company_id" ref="company_id" value={this.state.data.length ? this.state.data[0].company_id : ''} handleChange={this.handleChange} />
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-sm-6">
+                                <div className="col-sm-3">
                                     <div className="form-group">
-                                        <label htmlFor="career" className="col-sm-2 control-label">職位</label>
-                                        <div className="col-sm-10">
+                                        <label htmlFor="career" className="col-sm-4 control-label">職位</label>
+                                        <div className="col-sm-8">
                                             <Select type="career" ref="career" value={this.state.data.length && this.state.data[0].career.length ? this.state.data[0].career[0].id : ''} handleChange={this.handleChange} />
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-sm-6">
+                                <div className="col-sm-3">
                                     <div className="form-group">
-                                        <label htmlFor="name" className="col-sm-2 control-label">姓名</label>
-                                        <div className="col-sm-10">
+                                        <label htmlFor="name" className="col-sm-4 control-label">
+                                            <span className="require">*</span>
+                                            姓名
+                                        </label>
+                                        <div className="col-sm-8">
                                             <input type="text" className="form-control" id="name" placeholder="姓名" ref="name" value={this.state.data.length ? this.state.data[0].name : ''} onChange={this.handleChange} />
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-sm-6">
+                                <div className="col-sm-3">
                                     <div className="form-group">
-                                        <label htmlFor="phone" className="col-sm-2 control-label">電話</label>
-                                        <div className="col-sm-10">
+                                        <label htmlFor="ename" className="col-sm-4 control-label">英文名</label>
+                                        <div className="col-sm-8">
+                                            <input type="text" className="form-control" id="ename" placeholder="英文名" ref="ename" value={this.state.data.length ? this.state.data[0].ename : ''} onChange={this.handleChange} />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-sm-3">
+                                    <div className="form-group">
+                                        <label htmlFor="phone" className="col-sm-4 control-label">電話</label>
+                                        <div className="col-sm-8">
                                             <input type="text" className="form-control" id="phone" placeholder="電話" ref="phone" value={this.state.data.length ? this.state.data[0].phone : ''} onChange={this.handleChange} />
                                         </div>
                                     </div>
                                 </div>
-                                <div className="col-sm-6">
+                                <div className="col-sm-3">
                                     <div className="form-group">
-                                        <label htmlFor="mobile" className="col-sm-2 control-label">手機</label>
-                                        <div className="col-sm-10">
+                                        <label htmlFor="mobile" className="col-sm-4 control-label">手機</label>
+                                        <div className="col-sm-8">
                                             <input type="text" className="form-control" id="mobile" placeholder="手機" ref="mobile" value={this.state.data.length ? this.state.data[0].mobile : ''} onChange={this.handleChange} />
                                         </div>
                                     </div>
                                 </div>
                                 <div className="col-sm-6">
                                     <div className="form-group">
-                                        <label htmlFor="mail" className="col-sm-2 control-label">Mail</label>
+                                        <label htmlFor="email" className="col-sm-2 control-label">Email</label>
                                         <div className="col-sm-10">
-                                            <input type="mail" className="form-control" id="mail" placeholder="Mail" ref="mail" value={this.state.data.length ? this.state.data[0].mail : ''} onChange={this.handleChange} />
+                                            <input type="mail" className="form-control" id="email" placeholder="Email" ref="email" value={this.state.data.length ? this.state.data[0].email : ''} onChange={this.handleChange} />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-sm-12">
+                                    <div className="form-group">
+                                        <label htmlFor="address" className="col-sm-1 control-label">地址</label>
+                                        <div className="col-sm-11">
+                                            <input type="text" className="form-control" id="address" placeholder="地址" ref="address" value={this.state.data.length ? this.state.data[0].address : ''} onChange={this.handleChange} />
                                         </div>
                                     </div>
                                 </div>
@@ -99,12 +119,25 @@ module.exports = React.createClass({
                                     </div>
                                 </div>
                             </div>
+                            {/*
+                            //TODO: 新增名片
+                            <div className="box-footer">
+                                <div className="col-sm-12">
+                                    <div className="form-group">
+                                        <label htmlFor="remark" className="col-sm-1 control-label">名片</label>
+                                        <div className="col-sm-11">
+                                            <ReactDropzone id={this.state.data.length ? this.state.data[0].id : ''} file={this.state.data.length ? this.state.data[0].file : ''} />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            */}
                             <div className="box-footer">
                                 <div className="col-sm-12">
                                     <div className="form-group">
                                         <label htmlFor="remark" className="col-sm-1 control-label">備註</label>
                                         <div className="col-sm-11">
-                                            <textarea className="form-control" rows="5" placeholder="備註" ref="remark" value={this.state.data.length ? this.state.data[0].remark : ''} onChange={this.handleChange}></textarea>
+                                            <textarea className="form-control" rows="5" placeholder="備註" ref="remark" defaultValue={this.state.data.length ? this.state.data[0].remark : ''}></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -137,7 +170,9 @@ module.exports = React.createClass({
                         button: [{
                             type: 'ok',
                             fn: function() {
-                                this.history.pushState(null, '/main/client');
+                                if (!this.history.goBack()) {
+                                    this.history.pushState(null, '/main/client');
+                                }
                                 AppActionCreators.modal({
                                     display: false
                                 });
@@ -157,6 +192,8 @@ module.exports = React.createClass({
         }
     },
     handleClick: function(e) {
-        this.history.pushState(null, '/main/client');
+        if (!this.history.goBack()) {
+            this.history.pushState(null, '/main/client');
+        }
     }
 });
