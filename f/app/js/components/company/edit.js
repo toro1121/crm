@@ -1,4 +1,5 @@
 var React = require('react');
+var update = require('react-addons-update');
 var ReactRouter = require('react-router');
 //action
 var AppActionCreators = require('../../actions/AppActionCreators')({});
@@ -164,7 +165,7 @@ module.exports = React.createClass({
     },
     handleChange: function(e) {
         if (e) {
-            this.setState(React.addons.update(this.state, {
+            this.setState(update(this.state, {
                 data: [{
                     $merge: _COMMON.stateMerge(e)
                 }]

@@ -1,4 +1,4 @@
-var keyMirror = require('react/lib/keyMirror');
+var keyMirror = require('keymirror');
 
 module.exports = keyMirror({
     VIEW_ACTION: null,
@@ -48,8 +48,16 @@ module.exports = keyMirror({
     TAG_ITEM_CHECKBOX: null,
     TAG_INDUSTRY_DATA_ALL: null,
     TAG_INDUSTRY_DATA_ONE: null,
+    TAG_INDUSTRY_DATA_SORT: null,
+    TAG_INDUSTRY_DATA_PAGE: null,
+    TAG_INDUSTRY_DATA_FILTER: null,
+    TAG_INDUSTRY_CHECKBOX: null,
     TAG_CAREER_DATA_ALL: null,
     TAG_CAREER_DATA_ONE: null,
+    TAG_CAREER_DATA_SORT: null,
+    TAG_CAREER_DATA_PAGE: null,
+    TAG_CAREER_DATA_FILTER: null,
+    TAG_CAREER_CHECKBOX: null,
     TAG_DATA_ALL: null,
     TAG_ADD: null,
     TAG_EDIT: null,

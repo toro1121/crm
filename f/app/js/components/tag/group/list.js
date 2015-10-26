@@ -28,7 +28,7 @@ module.exports = React.createClass({
             title: '名稱',
             prop: 'name',
             render: (val, row) => (
-                <Link to={'/main/tag/' + 'row.id'}>
+                <Link to={'/main/tag/' + row.id}>
                     {row.name}
                     &nbsp;&nbsp;
                     <span style={{color:'#ccc'}}>( {row.child.length} )</span>

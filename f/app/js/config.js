@@ -10,8 +10,8 @@ module.exports = {
     },
 
     // web API url
-    apiUrl: '//crm.test.com/api',
-    // apiUrl: '/crm/api',
+    // apiUrl: '//crm.test.com/api',
+    apiUrl: '/crm/api',
 
     // dataTable一頁幾筆資料
     pageNum: 15,

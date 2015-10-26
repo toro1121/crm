@@ -1,4 +1,5 @@
 var React = require('react');
+var update = require('react-addons-update');
 var ReactRouter = require('react-router');
 //action
 var AppActionCreators = require('../../actions/AppActionCreators')({});
@@ -10,7 +11,6 @@ var _COMMON = require('../../common');
 //jsx
 var ReactDropzone = require('../element/ReactDropzone');
 
-// FIXME: modal自動跳出問題
 module.exports = React.createClass({
     mixins: [ReactRouter.History],
     getInitialState: function() {
@@ -80,7 +80,13 @@ module.exports = React.createClass({
                                     <div className="form-group">
                                         <label htmlFor="name" className="col-sm-2 control-label">照片</label>
                                         <div className="col-sm-10">
-                                            <ReactDropzone id={this.state.data.length ? this.state.data[0].id : ''} file={this.state.data.length ? this.state.data[0].file : ''} />
+                                            {this.state.data.length ?
+                                                <ReactDropzone options={{
+                                                    id:this.state.data[0].id,
+                                                    file:this.state.data[0].file,
+                                                    multiple:false
+                                                }} handleDrop={this.handleDrop} />
+                                            : ''}
                                         </div>
                                     </div>
                                 </div>
@@ -124,7 +130,7 @@ module.exports = React.createClass({
     },
     handleChange: function(e) {
         if (e) {
-            this.setState(React.addons.update(this.state, {
+            this.setState(update(this.state, {
                 data: [{
                     $merge: _COMMON.stateMerge(e)
                 }]
@@ -176,5 +182,8 @@ module.exports = React.createClass({
         } else if (!this.history.goBack()) {
             this.history.pushState(null, '/main');
         }
+    },
+    handleDrop: function(files) {
+        UserActionCreators.userFile(this.state.data[0].id, files[0]);
     }
 });

@@ -1,3 +1,4 @@
+var ReactDOM = require('react-dom');
 //dispatcher
 var AppDispatcher = require('./dispatcher/AppDispatcher');
 
@@ -11,18 +12,10 @@ module.exports = {
     getInputData: function(data) {
         var tmp = {};
         for (var key in data) {
-            var x = data[key].getDOMNode();
-            if (data[key].getDOMNode().tagName.match(/INPUT|SELECT|TEXTAREA/)) {
-                tmp[key] = x.value.trim();
-            } else {
-                x = $(x).find('input,select');
-                if (x.length) {
-                    if (x[0].type.match(/checkbox/)) {
-                        tmp[key] = x[0].checked;
-                    } else {
-                        tmp[key] = x[0].value.trim();
-                    }
-                }
+            var x = data[key].tagName ? data[key] : ReactDOM.findDOMNode(data[key]);
+            x = x.tagName.match(/INPUT|SELECT|TEXTAREA/) ? x : $(x).find('input, select')[0];
+            if (x.tagName.match(/INPUT|SELECT|TEXTAREA/)) {
+                tmp[key] = x.type.match(/checkbox/) ? x.checked : x.value.trim();
             }
         }
         return tmp;

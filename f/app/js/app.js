@@ -1,4 +1,5 @@
 var React = require('react');
+var ReactDOM = require('react-dom');
 var ReactRouter = require('react-router');
 var Router = ReactRouter.Router;
 var Route = ReactRouter.Route;
@@ -99,7 +100,7 @@ var TagGroupEdit = require('./components/tag/group/edit');
 var TagItem = require('./components/tag/item/list');
 var TagItemAdd = require('./components/tag/item/add');
 var TagItemEdit = require('./components/tag/item/edit');
-React.render((
+ReactDOM.render((
     <Router>
         <Route path="/" component={App}>
             <IndexRoute component={Login} />
@@ -143,4 +144,4 @@ React.render((
             <Route path="*" component={Login} />
         </Route>
     </Router>
-), $('body')[0]);
+), $('div#container')[0]);

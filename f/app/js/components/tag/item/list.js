@@ -3,7 +3,7 @@ var ReactRouter = require('react-router');
 //action
 var AppActionCreators = require('../../../actions/AppActionCreators')({});
 var TagActionCreators = require('../../../actions/TagActionCreators')({
-    type: 'item'
+    type: window.location.hash.split(/\//)[2] == 'tag' ? 'item' : window.location.hash.split(/\//)[2]
 });
 //stores
 var TagStore = require('../../../stores/TagStore');
