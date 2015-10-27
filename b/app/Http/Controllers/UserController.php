@@ -13,7 +13,6 @@ use Input;
 use Auth;
 use Mail;
 use File;
-use Image;
 
 class UserController extends ApiController {
 	public function status() {
@@ -82,14 +81,16 @@ class UserController extends ApiController {
 	}
 
 	public function forget() {
-		if($user = User::where('name', Input::get('name'))->where('username', Input::get('username'))->find(1)) {
+		if($user = User::where('name', Input::get('name'))->where('username', Input::get('username'))->take(1)->get()) {
+			$user = User::find($user[0]->id);
 			$password = rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9);
 			$user->password = bcrypt($password);
 			$user->password_note = $password;
 			$user->save();
 
+			//密碼通知信
 			if(Mail::send('emails.forget', array('data' => $user), function($message) use ($user) {
-				$message->from('service@51liangyi.com', '華人良醫CRM');
+				$message->from(env('APP_EMAIL'), env('APP_NAME') . 'CRM');
 				$message->to($user->email, $user->name)->subject('密碼通知信');
 			})) {
 				$this->res = array(
@@ -131,37 +132,19 @@ class UserController extends ApiController {
 					break;
 				case 'POST':
 					if(Input::hasFile('file')) {
-						$file = Input::file('file');
-
 						if(File::isDirectory($path)) {
 							File::deleteDirectory($path);
 						}
 
-						$fileName = 'photo.' . strtolower($file->getClientOriginalExtension());
 						//處理圖片
-						$img = Image::make($file);
-						$w = $img->width();
-						$h = $img->height();
-						if($w > $h) {
-							$width = $height = $h;
-							$x = ($w - $h) / 2;
-							$y = 0;
+						if(\App\Support\Helpers\File::image(Input::file('file'), array(
+							$path,
+							'photo.' . strtolower(Input::file('file')->getClientOriginalExtension())
+						), 100)) {
+							$user = User::find($id);
+							$user->file = md5(rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9));
+							$user->save();
 						}
-						else if($w < $h) {
-							$width = $height = $x = $w;
-							$x = 0;
-							$y = ($h - $w) / 2;
-						}
-						if(isset($width) && isset($height)) {
-							$img->crop($width, $height, $x, $y);
-						}
-						$img->resize(200, 200)->save();
-
-						$file->move($path, $fileName);
-
-						$user = User::find($id);
-						$user->file = md5(rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9));
-						$user->save();
 
 						$this->res['data'] = User::where('id', $id)->get();
 						$this->res['isProfile'] = TRUE;
@@ -202,9 +185,15 @@ class UserController extends ApiController {
 		foreach($data as $key => $value) {
 			$user->$key = $key == 'password' ? bcrypt($value) : $value;
 		}
+		$user->password_note = $data['password'];
 
 		if($user->save()) {
-			// TODO: 帳號註冊成功通知信
+			//帳號註冊成功通知信
+			Mail::send('emails.register', array('data' => $user), function($message) use ($user) {
+				$message->from(env('APP_EMAIL'), env('APP_NAME') . 'CRM');
+				$message->to($user->email, $user->name)->subject('帳號註冊成功');
+			});
+
 			$this->res = array(
 				'bool' => TRUE,
 				'message' => 'success!'
