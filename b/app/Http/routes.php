@@ -28,6 +28,8 @@ Route::group(array('prefix' => 'api'), function() {
 			'get',
 			'post'
 		), 'user/file/{id?}', 'UserController@file');
+		
+		Route::resource('log', 'LogController');
 
 		Route::resource('company', 'CompanyController');
 		Route::resource('client', 'ClientController');

@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
 use App\User;
+use App\Log;
 use Input;
 use Auth;
 use Mail;
@@ -37,6 +38,14 @@ class UserController extends ApiController {
 			'username' => Input::get('username'),
 			'password' => Input::get('password')
 		), $remember)) {
+			//登入記錄
+			$log = new Log;
+			$log->foreign_id = Auth::user()->id;
+			$log->model = 'App\User';
+			$log->type = 'login';
+			$log->content = \Request::getClientIp(true);
+			$log->save();
+
 			$this->res = array(
 				'bool' => Auth::check(),
 				'message' => '登入成功!',
