@@ -8,7 +8,7 @@ var AppConstants = require('../constants/AppConstants');
 //dispatcher
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 //custom
-var _CONFIG = require('../config');
+var _CONFIG = require('../config')();
 var _COMMON = require('../common');
 
 _COMMON.storageInit('client');

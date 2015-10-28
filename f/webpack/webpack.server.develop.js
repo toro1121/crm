@@ -6,12 +6,10 @@ var config = require('./webpack.config.develop');
 
 new WebpackDevServer(webpack(config), {
     contentBase: config.webDir,
-    publicPath: config.output.publicPath,
+    hot: true,
     stats: {
         colors: true
     },
-    hot: true,
-    noInfo: false,
 }).listen(config.port, config.host, function(err, res) {
     if (err) {
         console.log(err);

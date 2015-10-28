@@ -1,19 +1,20 @@
 {
   "name": "crm",
   "version": "1.0.0",
+  "author": "Leo Lee",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "develop": "node ./webpack/webpack.server.develop.js",
-    "deploy": "webpack -p --config ./webpack/webpack.config.deploy.js"
+    "deploy.test": "rm -rf ./dist/* && webpack -p --config ./webpack/webpack.config.deploy.test.js",
+    "deploy.prod": "rm -rf ./dist/* && webpack -p --config ./webpack/webpack.config.deploy.prod.js"
   },
-  "author": "Leo Lee",
-  "license": "MIT",
   "dependencies": {
     "autoprefixer-core": "^6.0.1",
     "babel-loader": "^5.3.2",
     "css-loader": "^0.21.0",
     "csswring": "^4.0.0",
     "extract-text-webpack-plugin": "^0.8.2",
+    "file-loader": "^0.8.4",
     "flux": "^2.1.1",
     "history": "^1.12.6",
     "html-webpack-plugin": "^1.6.2",

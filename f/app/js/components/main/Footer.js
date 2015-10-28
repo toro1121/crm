@@ -1,6 +1,6 @@
 var React = require('react');
 //custom
-var _CONFIG = require('../../config');
+var _CONFIG = require('../../config')();
 
 module.exports = React.createClass({
     render: function() {

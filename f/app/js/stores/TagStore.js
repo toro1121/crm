@@ -10,7 +10,7 @@ var AppDispatcher = require('../dispatcher/AppDispatcher');
 //action
 var TagActionCreators = require('../actions/TagActionCreators')({});
 //custom
-var _CONFIG = require('../config');
+var _CONFIG = require('../config')();
 var _COMMON = require('../common');
 
 _COMMON.storageInit('tag');

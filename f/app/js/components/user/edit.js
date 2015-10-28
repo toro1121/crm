@@ -82,9 +82,9 @@ module.exports = React.createClass({
                                         <div className="col-sm-10">
                                             {this.state.data.length ?
                                                 <ReactDropzone options={{
-                                                    id:this.state.data[0].id,
-                                                    file:this.state.data[0].file,
-                                                    multiple:false
+                                                    id: this.state.data[0].id,
+                                                    file: this.state.data[0].file,
+                                                    multiple: false
                                                 }} handleDrop={this.handleDrop} />
                                             : ''}
                                         </div>

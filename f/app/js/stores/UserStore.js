@@ -11,7 +11,7 @@ var AppDispatcher = require('../dispatcher/AppDispatcher');
 var AppActionCreators = require('../actions/AppActionCreators')({});
 var UserActionCreators = require('../actions/UserActionCreators');
 //custom
-var _CONFIG = require('../config');
+var _CONFIG = require('../config')();
 
 var timer = false;
 var o = {

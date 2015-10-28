@@ -1,4 +1,5 @@
 var webpack = require('webpack');
+var assign = require('object-assign');
 var path = require('path');
 var util = require('util');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -9,11 +10,11 @@ var csswring = require('csswring');
 /*
  * 設定參數
  */
-var config = {
+var config = assign({}, {
     host: 'localhost',
     port: 80,
     webDir: path.resolve(__dirname, '../app'),
-};
+}, require('../app/js/config.js')('webpack'));
 config.appDir = config.webDir + '/js';
 config.bowerDir = config.webDir + '/../bower_components';
 config.nodeDir = config.webDir + '/../node_modules';
@@ -25,24 +26,32 @@ module.exports = function(option) {
     };
     var output = {
         path: config.appDir,
-        publicPath: '/js',
-        filename: '[name].js'
+        // publicPath: config.appDir,
+        filename: 'js/[name].[hash:8].js'
     };
     var resolve = {
-        // root : [config.appDir, config.bowerDir, config.nodeDir],
         alias: {},
         extensions: ['', '.js', '.jsx', '.css', '.scss', '.sass']
     };
+
+    var filePath = '';
+    switch (option.status) {
+        case 'deploy.test':
+            filePath = '/';
+            break;
+        case 'deploy.prod':
+            filePath = '/crm/'
+            break;
+    }
+
     var module = {
         noParse: [],
         loaders: [{
             test: /\.(png|jp(e)*g|gif|svg)\?*\w*/,
-            loaders: ['url'],
-            limit: 8192
+            loader: 'url-loader?limit=5120&name=' + filePath + 'image/[name].[hash:8].[ext]'
         }, {
             test: /\.(woff(2)*|ttf|eot)\?*\w*/,
-            loaders: ['url'],
-            limit: 8192
+            loader: 'url-loader?limit=5120&name=' + filePath + 'font/[name].[hash:8].[ext]'
         }, {
             test: /\.(js|jsx)$/,
             loaders: ['react-hot', 'babel'],
@@ -56,7 +65,14 @@ module.exports = function(option) {
             'window.jQuery': 'jquery',
             'root.jQuery': 'jquery'
         }),
-        new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.js')
+        // TODO: CommonsChunkPlugin http://segmentfault.com/a/1190000003499526
+        new webpack.optimize.CommonsChunkPlugin('vendor', 'js/vendor.[hash:8].js'),
+        new HtmlWebpackPlugin({
+            title: config.website.name1,
+            filename: 'index.html',
+            template: config.webDir + '/index.template.html',
+            inject: 'body'
+        })
     ];
 
     switch (option.status) {
@@ -74,8 +90,9 @@ module.exports = function(option) {
                 new webpack.HotModuleReplacementPlugin()
             );
             break;
-        case 'deploy':
-            output.path = config.webDir + '/../dist/js';
+        case 'deploy.test':
+        case 'deploy.prod':
+            output.path = config.webDir + '/../dist';
             module.loaders.push({
                 test: /\.s(c|a)ss$/,
                 loader: ExtractTextPlugin.extract('style', 'css!postcss!sass'),
@@ -85,11 +102,7 @@ module.exports = function(option) {
                 loader: ExtractTextPlugin.extract('style', 'css')
             });
             pugins.push(
-                new HtmlWebpackPlugin({
-                    filename: '../index.html',
-                    template: config.webDir + '/index.template.html'
-                }),
-                new ExtractTextPlugin('../css/bundle.css'),
+                new ExtractTextPlugin('css/style.[hash:8].css'),
                 new webpack.optimize.UglifyJsPlugin({
                     compress: {
                         warnings: false
@@ -105,6 +118,7 @@ module.exports = function(option) {
     var addVendor = function(type, name, path) {
         resolve.alias[name] = path;
         module.noParse.push(new RegExp('^' + name + '$'));
+        //js自動加入entry.vender
         if (type === 'js') {
             entry.vendor.push(name);
         }

@@ -4,7 +4,7 @@ var AppConstants = require('../constants/AppConstants');
 //dispatcher
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 //custom
-var _CONFIG = require('../config');
+var _CONFIG = require('../config')();
 
 module.exports = function(config) {
     var o = {

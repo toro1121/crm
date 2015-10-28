@@ -13,6 +13,10 @@ use Input;
 
 class ClientController extends ApiController {
 
+	public function file() {
+		
+	}
+
 	/**
 	 * Display a listing of the resource.
 	 *

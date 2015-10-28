@@ -5,7 +5,7 @@ var UserActionCreators = require('../../actions/UserActionCreators');
 //store
 var UserStore = require('../../stores/UserStore');
 //custom
-var _CONFIG = require('../../config');
+var _CONFIG = require('../../config')();
 var _COMMON = require('../../common');
 
 module.exports = React.createClass({
