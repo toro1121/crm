@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\User;
+use App\Models\User\User;
 use App\Log;
 use Input;
 use Auth;
@@ -82,26 +82,28 @@ class UserController extends ApiController {
 
 	public function forget() {
 		if($user = User::where('name', Input::get('name'))->where('username', Input::get('username'))->take(1)->get()) {
-			$user = User::find($user[0]->id);
 			$password = rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9);
-			$user->password = bcrypt($password);
-			$user->password_note = $password;
-			$user->save();
-
-			//密碼通知信
-			if(Mail::send('emails.forget', array('data' => $user), function($message) use ($user) {
-				$message->from(env('APP_EMAIL'), env('APP_NAME') . 'CRM');
-				$message->to($user->email, $user->name)->subject('密碼通知信');
-			})) {
-				$this->res = array(
-					'bool' => TRUE,
-					'message' => '重設密碼信已寄出!'
-				);
-			}
-			else {$this->res = array(
-					'bool' => FALSE,
-					'message' => '重設密碼信發送失敗!'
-				);
+			$this->res = $this->update($user[0]->id, array(
+				'password' => $password,
+				'password_note' => $password
+			));
+			if($this->res['bool']) {
+				$user = $this->res['data'][0];
+				//密碼通知信
+				if(Mail::send('emails.forget', array('data' => $user), function($message) use ($user) {
+					$message->from(env('APP_EMAIL'), env('APP_NAME') . 'CRM');
+					$message->to($user->email, $user->name)->subject('密碼通知信');
+				})) {
+					$this->res = array(
+						'bool' => TRUE,
+						'message' => '重設密碼信已寄出!'
+					);
+				}
+				else {$this->res = array(
+						'bool' => FALSE,
+						'message' => '重設密碼信發送失敗!'
+					);
+				}
 			}
 		}
 		else {
@@ -124,11 +126,7 @@ class UserController extends ApiController {
 						}
 					}
 
-					if(File::exists($file)) {
-						$response = \Response::make(File::get($file), 200);
-						$response->header('Content-Type', File::type($file));
-						return $response;
-					}
+					return \App\Support\Helpers\FileHelper::imageDisplay($file);
 					break;
 				case 'POST':
 					if(Input::hasFile('file')) {
@@ -137,7 +135,7 @@ class UserController extends ApiController {
 						}
 
 						//處理圖片
-						if(\App\Support\Helpers\File::image(Input::file('file'), array(
+						if(\App\Support\Helpers\FileHelper::image(Input::file('file'), array(
 							$path,
 							'photo.' . strtolower(Input::file('file')->getClientOriginalExtension())
 						), 100)) {
@@ -181,13 +179,7 @@ class UserController extends ApiController {
 	public function store() {
 		$data = Input::all();
 
-		$user = new User;
-		foreach($data as $key => $value) {
-			$user->$key = $key == 'password' ? bcrypt($value) : $value;
-		}
-		$user->password_note = $data['password'];
-
-		if($user->save()) {
+		if(\App\Models\User\UserService::data(new User, $data)) {
 			//帳號註冊成功通知信
 			Mail::send('emails.register', array('data' => $user), function($message) use ($user) {
 				$message->from(env('APP_EMAIL'), env('APP_NAME') . 'CRM');
@@ -233,17 +225,12 @@ class UserController extends ApiController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id) {
-		$data = Input::all();
+	public function update($id, $data = FALSE) {
+		$data = $data ? $data : Input::all();
 		$isProfile = isset($data['isProfile']);
 		unset($data['isProfile']);
 
-		$user = User::find($id);
-		foreach($data as $key => $value) {
-			$user->$key = $key == 'password' ? bcrypt($value) : $value;
-		}
-
-		if($user->save()) {
+		if(\App\Models\User\UserService::data(User::find($id), $data)) {
 			$this->res = array(
 				'bool' => TRUE,
 				'message' => 'success!',

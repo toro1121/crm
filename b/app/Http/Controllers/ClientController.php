@@ -7,14 +7,50 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Client;
-use App\Taggable;
+use App\Models\Client\Client;
+use App\Models\Tag\Taggable;
 use Input;
 
 class ClientController extends ApiController {
+	public function file($id = FALSE) {
+		$id = $id ? $id : Input::get('id');
+		if($id) {
+			$path = storage_path("uploads/user/{$id}");
+			switch(\Request::method()) {
+				case'GET':
+					$file = storage_path('photo.jpg');
+					foreach(File::files($path) as $f) {
+						if(preg_match("/photo\.[a-z]+/", $f)) {
+							$file = $f;
+							break;
+						}
+					}
 
-	public function file() {
-		
+					return \App\Support\Helpers\FileHelper::imageDisplay($file);
+					break;
+				case 'POST':
+					if(Input::hasFile('file')) {
+						if(File::isDirectory($path)) {
+							File::deleteDirectory($path);
+						}
+
+						//處理圖片
+						if(\App\Support\Helpers\FileHelper::image(Input::file('file'), array(
+							$path,
+							'photo.' . strtolower(Input::file('file')->getClientOriginalExtension())
+						), 100)) {
+							$user = User::find($id);
+							$user->file = md5(rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9));
+							$user->save();
+						}
+
+						$this->res['data'] = User::where('id', $id)->get();
+						$this->res['isProfile'] = TRUE;
+						return $this->res;
+					}
+					break;
+			}
+		}
 	}
 
 	/**

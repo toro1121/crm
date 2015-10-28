@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Company;
-use App\Taggable;
+use App\Models\Company\Company;
+use App\Models\Tag\Taggable;
 use Input;
 
 class CompanyController extends ApiController {

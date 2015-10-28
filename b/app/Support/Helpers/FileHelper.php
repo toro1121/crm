@@ -1,9 +1,18 @@
 <?
 namespace App\Support\Helpers;
 
+use File;
 use Image;
 
-class File {
+class FileHelper {
+
+	public static function imageDisplay($file) {
+		if(File::exists($file)) {
+			$response = \Response::make(File::get($file), 200);
+			$response->header('Content-Type', File::type($file));
+			return $response;
+		}
+	}
 
 	public static function image($source, $target, $limit = FALSE, $width = FALSE, $height = FALSE) {
 		$img = Image::make($source);
