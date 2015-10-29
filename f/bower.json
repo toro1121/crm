@@ -1,6 +1,6 @@
 {
   "name": "crm",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "ignore": [
     "**/.*",
     "node_modules",
@@ -10,12 +10,10 @@
   ],
   "dependencies": {
     "admin-lte": "~2.1.2",
-    "jquery": "~2.1.4"
-  },
-  "devDependencies": {
-    "bootstrap": "~3.3.4",
-    "font-awesome": "~4.3.0",
-    "ionicons": "~2.0.1",
-    "colorpicker": "~1.1.4"
+    "jquery": "~2.1.4",
+    "bootstrap": "~3.3.5",
+    "font-awesome": "~4.4.0",
+    "Ionicons": "ionicons#~2.0.1",
+    "colorpicker": "~1.1.5"
   }
 }

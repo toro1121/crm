@@ -24,4 +24,8 @@ class Client extends Model {
 		return $this->morphToMany('App\Models\Tag\Tag', 'taggable')->where('type', null);
 	}
 
+	public function file() {
+		return $this->morphMany('App\Models\File\File', 'fileable');
+	}
+
 }

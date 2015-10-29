@@ -1,3 +1,1 @@
-module.exports = require('./webpack.config')({
-    status: 'develop'
-});
+module.exports = require('./webpack.config')('develop');

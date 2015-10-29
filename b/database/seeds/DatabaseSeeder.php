@@ -4,10 +4,10 @@ use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
 //load model
-use App\User;
-use App\Company;
-use App\Client;
-use App\Tag;
+use App\Models\User\User;
+use App\Models\Company\Company;
+use App\Models\Client\Client;
+use App\Models\Tag\Tag;
 
 class DatabaseSeeder extends Seeder {
 	/**

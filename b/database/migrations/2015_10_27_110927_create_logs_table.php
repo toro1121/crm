@@ -12,11 +12,13 @@ class CreateLogsTable extends Migration {
 	public function up() {
 		if(!Schema::hasTable('logs')) {
 			Schema::create('logs', function(Blueprint $table) {
-				$table->increments('id');
-				$table->integer('foreign_id')->unsigned();
-				$table->string('model')->nullable();
+				$table->increments('id')->unsigned();
+				$table->integer('loggable_id')->unsigned();
+				$table->string('loggable_type')->nullable();
 				$table->string('type')->nullable();
-				$table->text('content');
+				$table->text('var_a');
+				$table->text('var_b');
+				$table->text('var_c');
 				$table->timestamps();
 			});
 		}

@@ -1,10 +1,9 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var ReactRouter = require('react-router');
-var Router = ReactRouter.Router;
-var Route = ReactRouter.Route;
-var Redirect = ReactRouter.Redirect;
-var IndexRoute = ReactRouter.IndexRoute;
+import {
+    Router, Route, Redirect, IndexRoute, History
+}
+from 'react-router';
 //action
 var UserActionCreators = require('./actions/UserActionCreators');
 //stores
@@ -18,7 +17,7 @@ require('AdminLTE.css');
 require('../assets/css/fix');
 
 var App = React.createClass({
-    mixins: [ReactRouter.History],
+    mixins: [History],
     getInitialState: function() {
         return UserStore.getData('profile');
     },

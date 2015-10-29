@@ -7,19 +7,19 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var autoprefixer = require('autoprefixer-core');
 var csswring = require('csswring');
 
-/*
- * 設定參數
- */
-var config = assign({}, {
-    host: 'localhost',
-    port: 80,
-    webDir: path.resolve(__dirname, '../app'),
-}, require('../app/js/config.js')('webpack'));
-config.appDir = config.webDir + '/js';
-config.bowerDir = config.webDir + '/../bower_components';
-config.nodeDir = config.webDir + '/../node_modules';
+module.exports = function(type) {
+    /*
+     * 設定參數
+     */
+    var config = assign({}, {
+        host: 'localhost',
+        port: 80,
+        webDir: path.resolve(__dirname, '../app'),
+    }, require('../app/js/config.js')(type));
+    config.appDir = config.webDir + '/js';
+    config.bowerDir = config.webDir + '/../bower_components';
+    config.nodeDir = config.webDir + '/../node_modules';
 
-module.exports = function(option) {
     var entry = {
         bundle: [config.appDir + '/app'],
         vendor: []
@@ -33,25 +33,14 @@ module.exports = function(option) {
         alias: {},
         extensions: ['', '.js', '.jsx', '.css', '.scss', '.sass']
     };
-
-    var filePath = '';
-    switch (option.status) {
-        case 'deploy.test':
-            filePath = '/';
-            break;
-        case 'deploy.prod':
-            filePath = '/crm/'
-            break;
-    }
-
     var module = {
         noParse: [],
         loaders: [{
             test: /\.(png|jp(e)*g|gif|svg)\?*\w*/,
-            loader: 'url-loader?limit=5120&name=' + filePath + 'image/[name].[hash:8].[ext]'
+            loader: 'url-loader?limit=5120&name=' + (type == 'deploy' ? '../' : '') + 'image/[name].[hash:8].[ext]'
         }, {
             test: /\.(woff(2)*|ttf|eot)\?*\w*/,
-            loader: 'url-loader?limit=5120&name=' + filePath + 'font/[name].[hash:8].[ext]'
+            loader: 'url-loader?limit=5120&name=' + (type == 'deploy' ? '../' : '') + 'font/[name].[hash:8].[ext]'
         }, {
             test: /\.(js|jsx)$/,
             loaders: ['react-hot', 'babel'],
@@ -75,7 +64,7 @@ module.exports = function(option) {
         })
     ];
 
-    switch (option.status) {
+    switch (type) {
         case 'develop':
             entry.bundle.push(util.format('webpack-dev-server/client?http://%s:%d', config.host, config.port), 'webpack/hot/dev-server');
             module.loaders.push({
@@ -90,8 +79,7 @@ module.exports = function(option) {
                 new webpack.HotModuleReplacementPlugin()
             );
             break;
-        case 'deploy.test':
-        case 'deploy.prod':
+        case 'deploy':
             output.path = config.webDir + '/../dist';
             module.loaders.push({
                 test: /\.s(c|a)ss$/,
@@ -153,9 +141,8 @@ module.exports = function(option) {
     addVendor('css', 'AdminLTE.css', config.bowerDir + '/admin-lte/dist/css/AdminLTE.min');
 
     return {
-        webDir: config.webDir,
-        host: config.host,
-        port: config.port,
+        config: config,
+
         entry: entry,
         output: output,
         postcss: [autoprefixer, csswring],

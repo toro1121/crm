@@ -20,7 +20,6 @@ class CreateUsersTable extends Migration {
 				$table->string('name');
 				$table->string('email')->unique();
 				$table->text('remark')->nullable();
-				$table->text('file')->nullable();
 				$table->timestamps();
 			});
 		}

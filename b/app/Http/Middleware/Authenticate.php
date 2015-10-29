@@ -31,12 +31,16 @@ class Authenticate {
 	 * @return mixed
 	 */
 	public function handle($request, Closure $next) {
-		if($this->auth->guest()) {
-			if($request->ajax()) {
+		//測試直接跳過認證
+		if (env('APP_ENV') == 'test') {
+			return $next($request);
+		}
+
+		if ($this->auth->guest()) {
+			if ($request->ajax()) {
 				return response('Unauthorized.', 401);
 				// exit;
-			}
-			else {
+			} else {
 				// return redirect()->guest('auth/login');
 				exit;
 			}

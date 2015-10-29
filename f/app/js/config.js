@@ -3,13 +3,12 @@ module.exports = function(bool) {
         website: {
             name1: 'Toro',
             name2: 'T',
-            version: '1.0',
+            version: '0.1.0',
             url: 'https://github.com/toro1121/crm'
         },
 
         // web API url
-        apiUrl: '//crm.test.com/api',
-        // apiUrl: '/crm/api',
+        apiUrl: '//test.com/crm/api',
 
         // dataTable一頁幾筆資料
         pageNum: 15,
