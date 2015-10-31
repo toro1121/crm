@@ -18,15 +18,20 @@ class ApiAfter {
 
 		//debugbar
 		$data = \Request::all();
-		if(isset($data['debug'])) {
+		if (isset($data['debug'])) {
 			\Debugbar::enable();
 			echo '<pre>';
 			print_r($response);
 			echo '</pre>';
-		}
-		else {
+		} else {
 			\Debugbar::disable();
-			return $response;
+			if (\Request::has('callback')) {
+				$response = json_encode($response);
+				echo \Request::get('callback') . "({$response})";
+				exit;
+			} else {
+				return $response;
+			}
 		}
 	}
 

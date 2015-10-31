@@ -26,23 +26,18 @@ Route::group(['prefix' => 'api'], function () {
 	Route::group(['middleware' => 'auth'], function () {
 		//User
 		Route::resource('user', 'UserController');
-		Route::match([
-			'get',
-			'post',
-		], 'user/file/{id?}', 'UserController@file');
 
 		//Log
 		Route::resource('log', 'LogController');
+
+		//File
+		Route::resource('file', 'FileController');
 
 		//Company
 		Route::resource('company', 'CompanyController');
 
 		//Client
 		Route::resource('client', 'ClientController');
-		Route::match([
-			'get',
-			'post',
-		], 'client/file/{id?}', 'ClientController@file');
 
 		//Tag
 		Route::group(['prefix' => 'tag'], function () {

@@ -20,7 +20,7 @@ CanResetPasswordContract {
 
 	protected $hidden = array('password', 'password_note', 'remember_token');
 
-	public function photo() {
+	public function files() {
 		return $this->morphMany('App\Models\File\File', 'fileable');
 	}
 

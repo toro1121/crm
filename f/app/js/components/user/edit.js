@@ -82,8 +82,7 @@ module.exports = React.createClass({
                                         <div className="col-sm-10">
                                             {this.state.data.length ?
                                                 <ReactDropzone options={{
-                                                    id: this.state.data[0].id,
-                                                    file: this.state.data[0].file,
+                                                    file: this.state.data[0].files ? this.state.data[0].files : null,
                                                     multiple: false
                                                 }} handleDrop={this.handleDrop} />
                                             : ''}
@@ -184,6 +183,6 @@ module.exports = React.createClass({
         }
     },
     handleDrop: function(files) {
-        UserActionCreators.userFile(this.state.data[0].id, files[0]);
+        UserActionCreators.file(files[0], this.state.data[0].id);
     }
 });

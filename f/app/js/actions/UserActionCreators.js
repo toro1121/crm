@@ -34,18 +34,5 @@ module.exports = assign(require('./AppActionCreators')({
             url: '/user/forget',
             data: data
         }, AppConstants.USER_FORGET);
-    },
-    userFile: function(id, file) {
-        var data = new FormData();
-        data.append('id', id);
-        data.append('file', file);
-        this.ajax({
-            type: 'POST',
-            cache: false,
-            processData: false,
-            contentType: false,
-            url: '/user/file',
-            data: data
-        }, AppConstants.USER_EDIT);
     }
 });

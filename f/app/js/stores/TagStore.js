@@ -10,7 +10,7 @@ var AppDispatcher = require('../dispatcher/AppDispatcher');
 //action
 var TagActionCreators = require('../actions/TagActionCreators')({});
 //custom
-var _CONFIG = require('../config')();
+var _CONFIG = require('../../../config')();
 var _COMMON = require('../common');
 
 _COMMON.storageInit('tag');
@@ -43,7 +43,7 @@ var o = _COMMON.storageLoad('tag') ? _COMMON.storageLoad('tag') : {
                 prop: 'updated_at',
                 order: 'descending'
             },
-            pageNum: _CONFIG.pageNum,
+            pageNum: _CONFIG._NUM_PAGE,
             currentPage: 0,
             totalPages: 0,
             filterValue: {}
@@ -63,7 +63,7 @@ var o = _COMMON.storageLoad('tag') ? _COMMON.storageLoad('tag') : {
                 prop: 'updated_at',
                 order: 'descending'
             },
-            pageNum: _CONFIG.pageNum,
+            pageNum: _CONFIG._NUM_PAGE,
             currentPage: 0,
             totalPages: 0,
             filterValue: {}
@@ -83,7 +83,7 @@ var o = _COMMON.storageLoad('tag') ? _COMMON.storageLoad('tag') : {
                 prop: 'updated_at',
                 order: 'descending'
             },
-            pageNum: _CONFIG.pageNum,
+            pageNum: _CONFIG._NUM_PAGE,
             currentPage: 0,
             totalPages: 0,
             filterValue: {}
@@ -103,7 +103,7 @@ var o = _COMMON.storageLoad('tag') ? _COMMON.storageLoad('tag') : {
                 prop: 'updated_at',
                 order: 'descending'
             },
-            pageNum: _CONFIG.pageNum,
+            pageNum: _CONFIG._NUM_PAGE,
             currentPage: 0,
             totalPages: 0,
             filterValue: {}

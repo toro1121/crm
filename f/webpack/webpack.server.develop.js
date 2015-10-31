@@ -3,18 +3,21 @@ var WebpackDevServer = require('webpack-dev-server');
 var util = require('util');
 
 var config = require('./webpack.config.develop');
-var server = config.config;
+var _CONFIG = config._CONFIG;
 
 new WebpackDevServer(webpack(config), {
-    contentBase: server.webDir,
+    contentBase: _CONFIG._DIR_APP,
     hot: true,
     stats: {
         colors: true
     },
-}).listen(server.port, server.host, function(err, res) {
+    // headers: {
+    //     'Access-Control-Allow-Origin': '*'
+    // },
+}).listen(_CONFIG._PORT, _CONFIG._HOST, function(err, res) {
     if (err) {
         console.log(err);
     }
-    var url = (util.format('http://%s:%d', server.host, server.port));
+    var url = (util.format('http://%s:%d', _CONFIG._HOST, _CONFIG._PORT));
     console.log('Listening as ' + url);
 });

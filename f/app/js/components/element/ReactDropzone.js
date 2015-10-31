@@ -1,40 +1,33 @@
 var React = require('react');
 var Dropzone = require('react-dropzone');
-var assign = require('object-assign');
 //custom
-var _CONFIG = require('../../config')();
+var _CONFIG = require('../../../../config')();
 
 module.exports = React.createClass({
+    getInitialState: function() {
+        return {};
+    },
     render: function() {
         var opt = this.props.options;
-        var style = [{
-            borderRadius: '8px',
-            display: 'inline-block'
-        }, {
-            width: '88px',
-            height: '88px',
-            padding: '8px',
-            border: '2px dashed #bbb',
-            cursor: 'pointer'
-        }, {
-            width: '88px',
-            height: '88px',
-            marginLeft: '15px',
-            verticalAlign: 'top'
-        }];
-        var photo = _CONFIG.apiUrl + '/user/file/' + opt.id + '?' + opt.file;
+        var photo = _CONFIG._URL_API + '/file/' + (opt.file && opt.file.length ? opt.file[0].id + '?' + opt.file[0].name : 'false');
         return (
-            <div>
-                <Dropzone style={assign({}, style[0], style[1])} multiple={typeof opt.multiple == 'boolean' ? opt.mutiple : false} onDrop={this.props.handleDrop}>
-                    <div>把圖片拖曳至此，或是點擊上傳圖片。</div>
-                </Dropzone>
+            <div className="dropzone">
+                <div className="uploader">
+                    <Dropzone multiple={typeof opt.multiple == 'boolean' ? opt.mutiple : false} onDrop={this.props.handleDrop}>
+                        <div>把圖片拖曳至此，或是點擊上傳圖片。</div>
+                    </Dropzone>
+                </div>
                 {opt.multiple ?
-                <div></div>
+                <div className="imageShowArea">
+                    
+                </div>
                 :
-                <img style={assign({}, style[0], style[2])} src={photo} />
-                }
+                <img src={photo} />}
             </div>
         );
     },
-    handleClick: function(type, id, e) {}
+    handleChange: function(e) {},
+    handleClick: function(type, id, e) {
+
+    }
 });

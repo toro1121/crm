@@ -114,18 +114,21 @@ module.exports = React.createClass({
                                 </div>
 							</div>
 							{/*
-							//TODO: 新增名片
 							<div className="box-footer">
                                 <div className="col-sm-12">
                                     <div className="form-group">
                                         <label htmlFor="remark" className="col-sm-1 control-label">名片</label>
                                         <div className="col-sm-11">
-                                            <ReactDropzone id={'tmp'} />
+                                            <ReactDropzone options={{
+                                                id: this.state.data[0].id,
+                                                file: this.state.data[0].file,
+                                                multiple: true
+                                            }} handleDrop={this.handleDrop} />
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            */}
+                        	*/}
 							<div className="box-footer">
 								<div className="col-sm-12">
 									<div className="form-group">
@@ -177,5 +180,8 @@ module.exports = React.createClass({
     },
     handleClick: function(e) {
         this.history.pushState(null, '/main/client');
+    },
+    handleDrop: function(files) {
+        ClientActionCreators.file(this.state.data[0].id, files[0]);
     }
 });

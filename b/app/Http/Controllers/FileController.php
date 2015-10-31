@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Log;
+use App\Models\File\File;
 use Illuminate\Http\Request;
+use Input;
 
-class LogController extends ApiController {
+class FileController extends ApiController {
 	/**
 	 * Display a listing of the resource.
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
 	public function index() {
-		$this->res['data'] = Log::select('*', 'content as ip')->where('type', 'login')->get();
-		return $this->res;
+		//
 	}
 
 	/**
@@ -32,7 +32,28 @@ class LogController extends ApiController {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function store(Request $request) {
-		//
+		if (Input::hasFile('file')) {
+			$user_id = \Auth::user()->id;
+
+			//刪除tmp裡檔案
+			\App\Support\Helpers\FileHelper::tmpFileRemove($path = storage_path("uploads/tmp/{$user_id}"));
+
+			//處理圖片
+			$file = Input::file('file');
+			$filename = \App\Support\Helpers\CommonHelper::randomWord();
+			if ($info = \App\Support\Helpers\FileHelper::image($file, array(
+				$path,
+				$filename,
+			), 100)) {
+				\Session::pull('file');
+				\Session::push('file', array_merge($info, [
+					'type' => 'photo',
+					'name' => $filename,
+					'ext' => $file->getClientOriginalExtension(),
+					'size' => \File::size("{$path}/{$filename}"),
+				]));
+			}
+		}
 	}
 
 	/**
@@ -42,7 +63,16 @@ class LogController extends ApiController {
 	 * @return \Illuminate\Http\Response
 	 */
 	public function show($id) {
-		//
+		$path = storage_path('photo.jpg');
+		if ($file = File::where('id', $id)->get()) {
+			if (count($file)) {
+				$file = $file[0];
+				$type = explode('\\', $file['fileable_type']);
+				$type = strtolower($type[count($type) - 1]);
+				$path = storage_path("uploads/{$type}/{$file['fileable_id']}/{$file['name']}");
+			}
+		}
+		return \App\Support\Helpers\FileHelper::imageDisplay($path);
 	}
 
 	/**
@@ -75,5 +105,4 @@ class LogController extends ApiController {
 	public function destroy($id) {
 		//
 	}
-
 }

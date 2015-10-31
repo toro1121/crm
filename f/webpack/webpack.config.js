@@ -1,5 +1,4 @@
 var webpack = require('webpack');
-var assign = require('object-assign');
 var path = require('path');
 var util = require('util');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -7,26 +6,17 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var autoprefixer = require('autoprefixer-core');
 var csswring = require('csswring');
 
-module.exports = function(type) {
-    /*
-     * 設定參數
-     */
-    var config = assign({}, {
-        host: 'localhost',
-        port: 80,
-        webDir: path.resolve(__dirname, '../app'),
-    }, require('../app/js/config.js')(type));
-    config.appDir = config.webDir + '/js';
-    config.bowerDir = config.webDir + '/../bower_components';
-    config.nodeDir = config.webDir + '/../node_modules';
+module.exports = function(env) {
+    //讀入參數設定檔
+    var _CONFIG = require('../config.js')(env);
 
     var entry = {
-        bundle: [config.appDir + '/app'],
+        bundle: [_CONFIG._DIR_APP + '/js/app'],
         vendor: []
     };
     var output = {
-        path: config.appDir,
-        // publicPath: config.appDir,
+        path: _CONFIG._DIR_APP,
+        publicPath: '/' + (_CONFIG._ENV == 'develop' ? '' : 'crm/'),
         filename: 'js/[name].[hash:8].js'
     };
     var resolve = {
@@ -37,10 +27,10 @@ module.exports = function(type) {
         noParse: [],
         loaders: [{
             test: /\.(png|jp(e)*g|gif|svg)\?*\w*/,
-            loader: 'url-loader?limit=5120&name=' + (type == 'deploy' ? '../' : '') + 'image/[name].[hash:8].[ext]'
+            loader: 'url-loader?limit=5120&name=image/[name].[hash:8].[ext]'
         }, {
             test: /\.(woff(2)*|ttf|eot)\?*\w*/,
-            loader: 'url-loader?limit=5120&name=' + (type == 'deploy' ? '../' : '') + 'font/[name].[hash:8].[ext]'
+            loader: 'url-loader?limit=5120&name=font/[name].[hash:8].[ext]'
         }, {
             test: /\.(js|jsx)$/,
             loaders: ['react-hot', 'babel'],
@@ -48,6 +38,9 @@ module.exports = function(type) {
         }]
     };
     var pugins = [
+        new webpack.DefinePlugin({
+            NODE_ENV: JSON.stringify(_CONFIG._ENV)
+        }),
         new webpack.ProvidePlugin({
             $: 'jquery',
             jQuery: 'jquery',
@@ -57,20 +50,20 @@ module.exports = function(type) {
         // TODO: CommonsChunkPlugin http://segmentfault.com/a/1190000003499526
         new webpack.optimize.CommonsChunkPlugin('vendor', 'js/vendor.[hash:8].js'),
         new HtmlWebpackPlugin({
-            title: config.website.name1,
+            title: _CONFIG._NAME_F,
             filename: 'index.html',
-            template: config.webDir + '/index.template.html',
+            template: _CONFIG._DIR_APP + '/index.template.html',
             inject: 'body'
         })
     ];
 
-    switch (type) {
+    switch (_CONFIG._ENV) {
         case 'develop':
-            entry.bundle.push(util.format('webpack-dev-server/client?http://%s:%d', config.host, config.port), 'webpack/hot/dev-server');
+            entry.bundle.push(util.format('webpack-dev-server/client?http://%s:%d', _CONFIG._HOST, _CONFIG._PORT), 'webpack/hot/dev-server');
             module.loaders.push({
                 test: /\.s(c|a)ss$/,
                 loaders: ['style', 'css', 'postcss', 'sass'],
-                includePath: path.resolve(__dirname, './node_modules/compass-mixins/lib')
+                includePath: _CONFIG._DIR_NODE + '/compass-mixins/lib'
             }, {
                 test: /\.css$/,
                 loaders: ['style', 'css']
@@ -79,8 +72,9 @@ module.exports = function(type) {
                 new webpack.HotModuleReplacementPlugin()
             );
             break;
-        case 'deploy':
-            output.path = config.webDir + '/../dist';
+        case 'deploy.test':
+        case 'deploy.aws':
+            output.path = _CONFIG._DIR_APP + '/../dist';
             module.loaders.push({
                 test: /\.s(c|a)ss$/,
                 loader: ExtractTextPlugin.extract('style', 'css!postcss!sass'),
@@ -111,38 +105,34 @@ module.exports = function(type) {
             entry.vendor.push(name);
         }
     };
-    addVendor('js', 'jquery', config.bowerDir + '/jquery/dist/jquery.min');
-
+    //jQuery
+    addVendor('js', 'jquery', _CONFIG._DIR_BOWER + '/jquery/dist/jquery.min');
     //jQuery UI
-    addVendor('js', 'jquery-ui', config.bowerDir + '/jquery-ui/jquery-ui.min');
-    addVendor('css', 'jquery-ui.css', config.bowerDir + '/jquery-ui/themes/ui-lightness/jquery-ui.min');
-
+    addVendor('js', 'jquery-ui', _CONFIG._DIR_BOWER + '/jquery-ui/jquery-ui.min');
+    addVendor('css', 'jquery-ui.css', _CONFIG._DIR_BOWER + '/jquery-ui/themes/ui-lightness/jquery-ui.min');
     //bootstrap
-    addVendor('css', 'bootstrap.css', config.bowerDir + '/bootstrap/dist/css/bootstrap.min');
-    addVendor('js', 'bootstrap', config.bowerDir + '/bootstrap/dist/js/bootstrap.min');
-
-    addVendor('css', 'font-awesome.css', config.bowerDir + '/font-awesome/css/font-awesome.min');
-    addVendor('css', '_all-skins.css', config.bowerDir + '/admin-lte/dist/css/skins/_all-skins.min');
-    addVendor('css', 'ionicons.css', config.bowerDir + '/ionicons/css/ionicons.min');
-    addVendor('css', 'fullcalendar.min.css', config.bowerDir + '/admin-lte/plugins/fullcalendar/fullcalendar.min.css');
-    addVendor('css', 'fullcalendar.print.css', config.bowerDir + '/admin-lte/plugins/fullcalendar/fullcalendar.print');
-
-    addVendor('js', 'slimScroll', config.bowerDir + '/admin-lte/plugins/slimScroll/jquery.slimscroll.min');
-
-    addVendor('js', 'fastclick', config.bowerDir + '/admin-lte/plugins/fastclick/fastclick');
-
+    addVendor('css', 'bootstrap.css', _CONFIG._DIR_BOWER + '/bootstrap/dist/css/bootstrap.min');
+    addVendor('js', 'bootstrap', _CONFIG._DIR_BOWER + '/bootstrap/dist/js/bootstrap.min');
+    //Admin-LTE
+    addVendor('css', 'font-awesome.css', _CONFIG._DIR_BOWER + '/font-awesome/css/font-awesome.min');
+    addVendor('css', '_all-skins.css', _CONFIG._DIR_BOWER + '/admin-lte/dist/css/skins/_all-skins.min');
+    addVendor('css', 'ionicons.css', _CONFIG._DIR_BOWER + '/ionicons/css/ionicons.min');
+    addVendor('css', 'fullcalendar.min.css', _CONFIG._DIR_BOWER + '/admin-lte/plugins/fullcalendar/fullcalendar.min.css');
+    addVendor('css', 'fullcalendar.print.css', _CONFIG._DIR_BOWER + '/admin-lte/plugins/fullcalendar/fullcalendar.print');
+    addVendor('js', 'slimScroll', _CONFIG._DIR_BOWER + '/admin-lte/plugins/slimScroll/jquery.slimscroll.min');
+    addVendor('js', 'fastclick', _CONFIG._DIR_BOWER + '/admin-lte/plugins/fastclick/fastclick');
     //colorpicker
-    addVendor('js', 'colorpicker', config.bowerDir + '/colorpicker/jquery.colorpicker');
-    addVendor('css', 'colorpicker.css', config.bowerDir + '/colorpicker/jquery.colorpicker.css');
-
-    addVendor('css', 'react-data-components.css', config.nodeDir + '/react-data-components/css/table-twbs');
-    addVendor('css', 'react-select.css', config.nodeDir + '/react-select/dist/default');
-
-    addVendor('css', 'AdminLTE.css', config.bowerDir + '/admin-lte/dist/css/AdminLTE.min');
+    addVendor('js', 'colorpicker', _CONFIG._DIR_BOWER + '/colorpicker/jquery.colorpicker');
+    addVendor('css', 'colorpicker.css', _CONFIG._DIR_BOWER + '/colorpicker/jquery.colorpicker.css');
+    //react-data-components
+    addVendor('css', 'react-data-components.css', _CONFIG._DIR_NODE + '/react-data-components/css/table-twbs');
+    addVendor('css', 'react-select.css', _CONFIG._DIR_NODE + '/react-select/dist/default');
+    //Admin-LTE css
+    addVendor('css', 'AdminLTE.css', _CONFIG._DIR_BOWER + '/admin-lte/dist/css/AdminLTE.min');
 
     return {
-        config: config,
-
+        _CONFIG: _CONFIG,
+        //webpack options
         entry: entry,
         output: output,
         postcss: [autoprefixer, csswring],

@@ -23,7 +23,7 @@ class Company extends Model {
 	public function tag() {
 		return $this->morphToMany('App\Models\Tag\Tag', 'taggable')->where('type', '!=', array(
 			'industry',
-			'career'
+			'career',
 		));
 	}
 

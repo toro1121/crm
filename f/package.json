@@ -8,7 +8,9 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "develop": "node ./webpack/webpack.server.develop.js",
-        "deploy": "find1 ./dist/* ! -name '*.json' -exec rm -rf {} + && webpack -p --config ./webpack/webpack.config.deploy.js"
+        "deploy.test": "npm run cleanDist && webpack -p --color --config ./webpack/webpack.config.deploy.test.js",
+        "deploy.aws": "npm run cleanDist && webpack -p --color --config ./webpack/webpack.config.deploy.aws.js",
+        "cleanDist": "find1 ./dist/* ! -name '*.json' -exec rm -rf {} +"
     },
     "dependencies": {
         "autoprefixer-core": "^6.0.1",

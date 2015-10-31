@@ -2,11 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
 use App\Models\Company\Company;
 use App\Models\Tag\Taggable;
 use Input;
@@ -43,19 +38,18 @@ class CompanyController extends ApiController {
 		unset($data['industry']);
 
 		$company = new Company;
-		foreach($data as $key => $value) {
+		foreach ($data as $key => $value) {
 			$company->$key = $value;
 		}
 
-		if($company->save()) {
+		if ($company->save()) {
 			$company->industry()->sync(array($industry));
 
 			$this->res = array(
 				'bool' => true,
-				'message' => 'success!'
+				'message' => 'success!',
 			);
-		}
-		else {
+		} else {
 			$this->res['message'] = 'fail!';
 		}
 
@@ -95,20 +89,19 @@ class CompanyController extends ApiController {
 		unset($data['industry']);
 
 		$company = Company::find($id);
-		foreach($data as $key => $value) {
+		foreach ($data as $key => $value) {
 			$company->$key = $value;
 		}
 
-		if($company->save()) {
+		if ($company->save()) {
 			$company->industry()->sync(array($industry));
 
 			$this->res = array(
 				'bool' => true,
 				'message' => 'success!',
-				'data' => Company::with('industry', 'client')->where('id', $id)->get()
+				'data' => Company::with('industry', 'client')->where('id', $id)->get(),
 			);
-		}
-		else {
+		} else {
 			$this->res['message'] = 'fail!';
 		}
 

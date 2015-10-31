@@ -2,34 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
 use App\Models\Tag\Tag;
 use Input;
 
 class TagController extends ApiController {
 
 	private function data($fn, $id, $parent_id = FALSE) {
-		if($id) {
+		if ($id) {
 			$this->res['data'] = Tag::with('user')->where('id', $id)->get();
-		}
-		else {
+		} else {
 			$fn($parent_id);
 		}
 		return $this->res;
 	}
 
 	public function group($id = FALSE) {
-		return $this->data(function() {
+		return $this->data(function () {
 			$this->res['data'] = Tag::with('user', 'child')->whereRaw('parent_id = id')->where('type', NULL)->get();
 		}, $id);
 	}
 
 	public function item($parent_id, $id = FALSE) {
-		return $this->data(function($parent_id) {
+		return $this->data(function ($parent_id) {
 			$this->res['data'] = Tag::with('user')->whereRaw('parent_id != id')->where('parent_id', $parent_id)->get();
 		}, $id, $parent_id);
 	}
@@ -50,11 +44,11 @@ class TagController extends ApiController {
 	public function index() {
 		$this->res['data'] = Tag::with(array(
 			'parent',
-			'child' => function($q) {
+			'child' => function ($q) {
 				$q->with('client');
 			},
-			'client' => function($q) {
-			}
+			'client' => function ($q) {
+			},
 
 		))->where('type', null)->orderBy('parent_id', 'asc')->orderBy('id', 'asc')->get();
 		return $this->res;
@@ -80,12 +74,12 @@ class TagController extends ApiController {
 		unset($data['tagType']);
 
 		$tag = new Tag;
-		foreach($data as $key => $value) {
+		foreach ($data as $key => $value) {
 			$tag->$key = $value;
 		}
 
-		if($tag->save()) {
-			if(!isset($data['parent_id'])) {
+		if ($tag->save()) {
+			if (!isset($data['parent_id'])) {
 				$tag->parent_id = $tag->id;
 				$tag->save();
 			}
@@ -93,10 +87,9 @@ class TagController extends ApiController {
 				'bool' => true,
 				'message' => 'success!',
 				'type' => $tagType,
-				'data' => Tag::where('id', $tag->id)->get()
+				'data' => Tag::where('id', $tag->id)->get(),
 			);
-		}
-		else {
+		} else {
 			$this->res['message'] = 'fail!';
 		}
 
@@ -136,19 +129,18 @@ class TagController extends ApiController {
 		unset($data['tagType']);
 
 		$tag = Tag::find($id);
-		foreach($data as $key => $value) {
+		foreach ($data as $key => $value) {
 			$tag->$key = $value;
 		}
 
-		if($tag->save()) {
+		if ($tag->save()) {
 			$this->res = array(
 				'bool' => true,
 				'message' => 'success!',
 				'type' => $tagType,
-				'data' => Tag::where('id', $id)->get()
+				'data' => Tag::where('id', $id)->get(),
 			);
-		}
-		else {
+		} else {
 			$this->res['message'] = 'fail!';
 		}
 
@@ -162,7 +154,7 @@ class TagController extends ApiController {
 	 * @return Response
 	 */
 	public function destroy($id) {
-		if(!($parent_id = Input::get('parent_id'))) {
+		if (!($parent_id = Input::get('parent_id'))) {
 			Tag::whereIn('parent_id', Input::get('id'))->delete();
 		}
 		Tag::whereIn('id', Input::get('id'))->delete();

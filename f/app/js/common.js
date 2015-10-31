@@ -20,6 +20,7 @@ module.exports = {
         }
         return tmp;
     },
+    // FIXME: 更新時需要清理sessionStorage
     storageInit: function(type) {
         if (!window.sessionStorage[type]) {
             window.sessionStorage.setItem(type, JSON.stringify({}));

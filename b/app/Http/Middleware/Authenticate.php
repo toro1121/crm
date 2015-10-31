@@ -32,9 +32,9 @@ class Authenticate {
 	 */
 	public function handle($request, Closure $next) {
 		//測試直接跳過認證
-		if (env('APP_ENV') == 'test') {
-			return $next($request);
-		}
+		// if (env('APP_ENV') == 'develop') {
+		// 	return $next($request);
+		// }
 
 		if ($this->auth->guest()) {
 			if ($request->ajax()) {

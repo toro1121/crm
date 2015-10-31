@@ -8,7 +8,7 @@ var AppConstants = require('../constants/AppConstants');
 //dispatcher
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 //custom
-var _CONFIG = require('../config')();
+var _CONFIG = require('../../../config')();
 var _COMMON = require('../common');
 
 _COMMON.storageInit('client');
@@ -28,7 +28,7 @@ var o = _COMMON.storageLoad('client') ? _COMMON.storageLoad('client') : {
             prop: 'updated_at',
             order: 'descending'
         },
-        pageNum: _CONFIG.pageNum,
+        pageNum: _CONFIG._NUM_PAGE,
         currentPage: 0,
         totalPages: 0,
         filterValue: {}

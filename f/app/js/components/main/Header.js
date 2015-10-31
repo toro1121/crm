@@ -5,7 +5,7 @@ var UserActionCreators = require('../../actions/UserActionCreators');
 //store
 var UserStore = require('../../stores/UserStore');
 //custom
-var _CONFIG = require('../../config')();
+var _CONFIG = require('../../../../config')();
 var _COMMON = require('../../common');
 
 module.exports = React.createClass({
@@ -46,17 +46,17 @@ module.exports = React.createClass({
     },
     render: function() {
         if (this.props.state.data) {
-            var photo = _CONFIG.apiUrl + '/user/file/' + this.props.state.data.id + '?' + this.props.state.data.file;
+            var photo = _CONFIG._URL_API + '/file/' + (this.props.state.data.files && this.props.state.data.files.length ? this.props.state.data.files[0].id + '?' + this.props.state.data.files[0].name : false);
             var date = this.props.state.data.created_at ? _COMMON.dateFormat(this.props.state.data.created_at, 'yyyy/MM/dd') : null;
             return (
                 <header className="main-header">
                     <Link to={'/main'} className="logo">
                         <span className="logo-mini">
-                            <b>{_CONFIG.website.name2}</b>
+                            <b>{_CONFIG._NAME_S}</b>
                             CRM
                         </span>
                         <span className="logo-lg">
-                            <b>{_CONFIG.website.name1}</b>
+                            <b>{_CONFIG._NAME_F}</b>
                             CRM
                         </span>
                     </Link>

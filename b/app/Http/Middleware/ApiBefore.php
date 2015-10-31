@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 
 class ApiBefore {
-	
+
 	/**
 	 * Handle an incoming request.
 	 *

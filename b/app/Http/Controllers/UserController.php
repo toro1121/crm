@@ -2,154 +2,100 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-
-use App\Models\User\User;
+use App\Models\File\File;
 use App\Models\Log\Log;
+use App\Models\User\User;
+use Illuminate\Http\Request;
 use Input;
-use Auth;
-use Mail;
-use File;
 
 class UserController extends ApiController {
+
 	public function status() {
-		if(env('APP_ENV') == 'test') {
-			$this->res = array(
-				'bool' => TRUE,
-				'data' => User::find(1)
-			);
-		}
-		else {
-			$this->res = array(
-				'bool' => Auth::check(),
-				'data' => Auth::user()
-			);
-		}
+		$this->res = array(
+			'bool' => \Auth::check(),
+			// 'data' => \Auth::user(),
+			'data' => \Auth::check() ? User::with('files')->find(\Auth::user()->id) : null,
+		);
 		return $this->res;
 	}
 
 	public function login() {
 		$remember = Input::get('remember') == 'true' ? TRUE : FALSE;
-		if(Auth::attempt(array(
+		if (\Auth::attempt(array(
 			'username' => Input::get('username'),
-			'password' => Input::get('password')
+			'password' => Input::get('password'),
 		), $remember)) {
 			//登入記錄
-			$user = User::find(Auth::user()->id);
+			$user = User::find(\Auth::user()->id);
 			$log = new Log;
 			$log->type = 'login';
-			$log->content = \Request::getClientIp(true);
+			$log->var_a = \Request::getClientIp(true);
+			$log->var_b = \App\Support\Helpers\CommonHelper::randomWord();
 			$user->logs()->save($log);
 
 			$this->res = array(
-				'bool' => Auth::check(),
+				'bool' => \Auth::check(),
 				'message' => '登入成功!',
-				'data' => Auth::user()
+				// 'data' => \Auth::user(),
+				'data' => User::with('files')->find(\Auth::user()->id),
 			);
-		}
-		else {
+		} else {
 			$this->res = array(
-				'bool' => Auth::check(),
-				'message' => '查無此帳號!'
+				'bool' => \Auth::check(),
+				'message' => '查無此帳號!',
 			);
 		}
 		return $this->res;
 	}
 
 	public function logout() {
-		Auth::logout();
+		\Auth::logout();
 		$this->res = array(
-			'bool' => Auth::check(),
-			'message' => '登出成功!'
+			'bool' => \Auth::check(),
+			'message' => '登出成功!',
 		);
 		return $this->res;
 	}
 
 	public function register() {
 		$this->res = $this->store();
-		if($this->res['bool']) {
+		if ($this->res['bool']) {
 			$this->res['message'] = '帳號註冊成功!';
-		}
-		else {
+		} else {
 			$this->res['message'] = '帳號註冊失敗!';
 		}
 		return $this->res;
 	}
 
 	public function forget() {
-		if($user = User::where('name', Input::get('name'))->where('username', Input::get('username'))->take(1)->get()) {
+		if ($user = User::where('name', Input::get('name'))->where('username', Input::get('username'))->take(1)->get()) {
 			$password = rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9);
 			$this->res = $this->update($user[0]->id, array(
 				'password' => $password,
-				'password_note' => $password
+				'password_note' => $password,
 			));
-			if($this->res['bool']) {
+			if ($this->res['bool']) {
 				$user = $this->res['data'][0];
 				//密碼通知信
-				if(Mail::send('emails.forget', array('data' => $user), function($message) use ($user) {
+				if (\Mail::send('emails.forget', array('data' => $user), function ($message) use ($user) {
 					$message->from(env('APP_EMAIL'), env('APP_NAME') . 'CRM');
 					$message->to($user->email, $user->name)->subject('密碼通知信');
 				})) {
 					$this->res = array(
 						'bool' => TRUE,
-						'message' => '重設密碼信已寄出!'
+						'message' => '重設密碼信已寄出!',
 					);
-				}
-				else {$this->res = array(
+				} else {
+					$this->res = array(
 						'bool' => FALSE,
-						'message' => '重設密碼信發送失敗!'
+						'message' => '重設密碼信發送失敗!',
 					);
 				}
 			}
-		}
-		else {
+		} else {
 			$this->res['message'] = '查無此帳號!';
 		}
 		return $this->res;
-	}
-
-	public function file($id = FALSE) {
-		$id = $id ? $id : Input::get('id');
-		if($id) {
-			$path = storage_path("uploads/user/{$id}");
-			switch(\Request::method()) {
-				case'GET':
-					$file = storage_path('photo.jpg');
-					foreach(File::files($path) as $f) {
-						if(preg_match("/photo\.[a-z]+/", $f)) {
-							$file = $f;
-							break;
-						}
-					}
-
-					return \App\Support\Helpers\FileHelper::imageDisplay($file);
-					break;
-				case 'POST':
-					if(Input::hasFile('file')) {
-						if(File::isDirectory($path)) {
-							File::deleteDirectory($path);
-						}
-
-						//處理圖片
-						if(\App\Support\Helpers\FileHelper::image(Input::file('file'), array(
-							$path,
-							'photo.' . strtolower(Input::file('file')->getClientOriginalExtension())
-						), 100)) {
-							$user = User::find($id);
-							$user->file = md5(rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9));
-							$user->save();
-						}
-
-						$this->res['data'] = User::where('id', $id)->get();
-						$this->res['isProfile'] = TRUE;
-						return $this->res;
-					}
-					break;
-			}
-		}
 	}
 
 	/**
@@ -178,19 +124,18 @@ class UserController extends ApiController {
 	public function store() {
 		$data = Input::all();
 
-		if(\App\Models\User\UserService::data(new User, $data)) {
+		if (\App\Models\User\UserService::data(new User, $data)) {
 			//帳號註冊成功通知信
-			Mail::send('emails.register', array('data' => $user), function($message) use ($user) {
+			\Mail::send('emails.register', array('data' => $user), function ($message) use ($user) {
 				$message->from(env('APP_EMAIL'), env('APP_NAME') . 'CRM');
 				$message->to($user->email, $user->name)->subject('帳號註冊成功');
 			});
 
 			$this->res = array(
 				'bool' => TRUE,
-				'message' => 'success!'
+				'message' => 'success!',
 			);
-		}
-		else {
+		} else {
 			$this->res['message'] = 'fail!';
 		}
 
@@ -204,7 +149,9 @@ class UserController extends ApiController {
 	 * @return Response
 	 */
 	public function show($id) {
-		$this->res['data'] = User::where('id', '=', $id)->get();
+		$this->res['data'] = User::with(['files', 'logs' => function ($q) {
+			$q->take(1);
+		}])->where('id', '=', $id)->get();
 		return $this->res;
 	}
 
@@ -229,15 +176,32 @@ class UserController extends ApiController {
 		$isProfile = isset($data['isProfile']);
 		unset($data['isProfile']);
 
-		if(\App\Models\User\UserService::data(User::find($id), $data)) {
+		if (\App\Models\User\UserService::data($user = User::find($id), $data)) {
+			//處理照片
+			if (\Session::has('file')) {
+				$tmpfile = \Session::get('file');
+				$file = count($user->files) ? File::find($user->files[0]->id) : new File;
+				foreach ($tmpfile[0] as $key => $value) {
+					$file->$key = $value;
+				}
+				if ($user->files()->save($file)) {
+					$user_id = \Auth::user()->id;
+					$source = storage_path("uploads/tmp/{$user_id}");
+					if (\File::isDirectory($target = storage_path("uploads/user/{$id}"))) {
+						\File::deleteDirectory($target);
+					}
+					\File::move($source, $target);
+					\Session::pull('file');
+				}
+			}
+
 			$this->res = array(
 				'bool' => TRUE,
 				'message' => 'success!',
-				'data' => User::where('id', $id)->get(),
-				'isProfile' => $isProfile
+				'data' => User::with('files')->where('id', $id)->get(),
+				'isProfile' => $isProfile,
 			);
-		}
-		else {
+		} else {
 			$this->res['message'] = 'fail!';
 		}
 

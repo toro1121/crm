@@ -11,7 +11,7 @@ var AppDispatcher = require('../dispatcher/AppDispatcher');
 var AppActionCreators = require('../actions/AppActionCreators')({});
 var UserActionCreators = require('../actions/UserActionCreators');
 //custom
-var _CONFIG = require('../config')();
+var _CONFIG = require('../../../config')();
 
 var timer = false;
 var o = {
@@ -33,7 +33,7 @@ var o = {
             prop: 'updated_at',
             order: 'descending'
         },
-        pageNum: _CONFIG.pageNum,
+        pageNum: _CONFIG._NUM_PAGE,
         currentPage: 0,
         totalPages: 0,
         filterValue: {}
@@ -106,7 +106,7 @@ var Store = assign({}, EventEmitter.prototype, {
                 o.profile.status = action.res.bool;
                 o.profile.data = action.res.data;
 
-                //一分鐘檢查一次登入狀態
+                //10秒檢查一次登入狀態
                 if (timer) {
                     clearTimeout(timer);
                     timer = false;
@@ -114,7 +114,7 @@ var Store = assign({}, EventEmitter.prototype, {
                 if (o.profile.status) {
                     timer = setTimeout(function() {
                         UserActionCreators.userStatus();
-                    }, 60000);
+                    }, 10000);
                 }
 
                 Store.emitChange('status');

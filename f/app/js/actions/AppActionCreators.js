@@ -4,22 +4,33 @@ var AppConstants = require('../constants/AppConstants');
 //dispatcher
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 //custom
-var _CONFIG = require('../config')();
+var _CONFIG = require('../../../config')();
 
 module.exports = function(config) {
     var o = {
-        ajax: function(setting, actionType, data) {
-            setting.url = _CONFIG.apiUrl + setting.url;
+        ajax: function(options, actionType) {
+            options.url = _CONFIG._URL_API + options.url;
+            //如果env = develop
+            if (_CONFIG._ENV == 'develop') {
+                options.xhrFields = {
+                    withCredentials: true
+                };
+                options.data = assign({}, {
+                    env: _CONFIG._ENV
+                }, options.data);
+            }
             $.ajax(assign({
                 type: 'GET',
                 dataType: 'json',
                 success: function(res) {
-                    AppDispatcher.handleViewAction({
-                        actionType: actionType,
-                        res: res
-                    });
+                    if (actionType) {
+                        AppDispatcher.handleViewAction({
+                            actionType: actionType,
+                            res: res
+                        });
+                    }
                 }.bind(this)
-            }, setting));
+            }, options));
         }
     };
     if (typeof config.type1 == 'undefined') {
@@ -74,6 +85,18 @@ module.exports = function(config) {
                     id: id
                 }
             }, AppConstants[TYPE + '_DATA_ALL']);
+        };
+        o.file = function(file) {
+            var data = new FormData();
+            data.append('file', file);
+            this.ajax({
+                type: 'POST',
+                cache: false,
+                processData: false,
+                contentType: false,
+                url: '/file',
+                data: data
+            });
         };
         o.sort = function(sortBy) {
             AppDispatcher.handleViewAction({

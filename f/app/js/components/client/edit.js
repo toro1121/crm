@@ -1,5 +1,5 @@
-var React = require('react');
-var update = require('react-addons-update');
+import React from 'react';
+import update from 'react-addons-update';
 var ReactRouter = require('react-router');
 //action
 var AppActionCreators = require('../../actions/AppActionCreators')({});
@@ -121,13 +121,16 @@ module.exports = React.createClass({
                                 </div>
                             </div>
                             {/*
-                            //TODO: 新增名片
                             <div className="box-footer">
                                 <div className="col-sm-12">
                                     <div className="form-group">
                                         <label htmlFor="remark" className="col-sm-1 control-label">名片</label>
                                         <div className="col-sm-11">
-                                            <ReactDropzone id={this.state.data.length ? this.state.data[0].id : ''} file={this.state.data.length ? this.state.data[0].file : ''} />
+                                            <ReactDropzone options={{
+                                                id: this.state.data[0].id,
+                                                file: this.state.data[0].file,
+                                                multiple: true
+                                            }} handleDrop={this.handleDrop} />
                                         </div>
                                     </div>
                                 </div>
@@ -196,5 +199,8 @@ module.exports = React.createClass({
         if (!this.history.goBack()) {
             this.history.pushState(null, '/main/client');
         }
+    },
+    handleDrop: function(files) {
+        ClientActionCreators.file(this.state.data[0].id, files[0]);
     }
 });
