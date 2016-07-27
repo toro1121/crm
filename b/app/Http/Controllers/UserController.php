@@ -13,29 +13,24 @@ class UserController extends ApiController {
     public $develop;
 
     public function status() {
-        $this->res = array(
-            'bool' => \Auth::check(),
-            // 'data' => \Auth::user(),
-            'data' => \Auth::check() ? User::with('files')->find(\Auth::user()->id) : null,
-        );
+        $this->res['bool'] = \Auth::check();
+        $this->res['data'] = \Auth::check() ? User::with('files')->find(\Auth::user()->id) : null;
 
         // FORTEST:
         if (env('APP_ENV') == 'develop') {
-            $this->res = array(
-                'bool' => true,
-                'data' => User::with('files')->find(1),
-            );
+            $this->res['bool'] = true;
+            $this->res['data'] = User::with('files')->find(1);
         }
 
         return $this->res;
     }
 
     public function login() {
-        $remember = Input::get('remember') == 'true' ? TRUE : FALSE;
-        if (\Auth::attempt(array(
+        $remember = Input::get('remember') == 'true' ? true : false;
+        if (\Auth::attempt([
             'username' => Input::get('username'),
             'password' => Input::get('password'),
-        ), $remember)) {
+        ], $remember)) {
             //登入記錄
             $user = User::find(\Auth::user()->id);
             $log = new Log;
@@ -44,27 +39,23 @@ class UserController extends ApiController {
             $log->var_b = \App\Support\Helpers\CommonHelper::randomWord();
             $user->logs()->save($log);
 
-            $this->res = array(
+            $this->res = [
                 'bool' => \Auth::check(),
                 'message' => '登入成功!',
                 // 'data' => \Auth::user(),
                 'data' => User::with('files')->find(\Auth::user()->id),
-            );
+            ];
         } else {
-            $this->res = array(
-                'bool' => \Auth::check(),
-                'message' => '查無此帳號!',
-            );
+            $this->res['bool'] = \Auth::check();
+            $this->res['message'] = '查無此帳號!';
         }
         return $this->res;
     }
 
     public function logout() {
         \Auth::logout();
-        $this->res = array(
-            'bool' => \Auth::check(),
-            'message' => '登出成功!',
-        );
+        $this->res['bool'] = \Auth::check();
+        $this->res['message'] = '登出成功!';
         return $this->res;
     }
 
@@ -81,26 +72,21 @@ class UserController extends ApiController {
     public function forget() {
         if ($user = User::where('name', Input::get('name'))->where('username', Input::get('username'))->take(1)->get()) {
             $password = rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9) . rand(0, 9);
-            $this->res = $this->update($user[0]->id, array(
+            $this->res = $this->update($user[0]->id, [
                 'password' => $password,
                 'password_note' => $password,
-            ));
+            ]);
             if ($this->res['bool']) {
                 $user = $this->res['data'][0];
                 //密碼通知信
-                if (\Mail::send('emails.forget', array('data' => $user), function ($message) use ($user) {
+                if (\Mail::send('emails.forget', ['data' => $user], function ($message) use ($user) {
                     $message->from(env('APP_EMAIL'), env('APP_NAME') . 'CRM');
                     $message->to($user->email, $user->name)->subject('密碼通知信');
                 })) {
-                    $this->res = array(
-                        'bool' => TRUE,
-                        'message' => '重設密碼信已寄出!',
-                    );
+                    $this->res['message'] = '重設密碼信已寄出!';
                 } else {
-                    $this->res = array(
-                        'bool' => FALSE,
-                        'message' => '重設密碼信發送失敗!',
-                    );
+                    $this->res['bool'] = false;
+                    $this->res['message'] = '重設密碼信發送失敗!';
                 }
             }
         } else {
@@ -137,15 +123,13 @@ class UserController extends ApiController {
 
         if (\App\Models\User\UserService::data(new User, $data)) {
             //帳號註冊成功通知信
-            \Mail::send('emails.register', array('data' => $user), function ($message) use ($user) {
+            \Mail::send('emails.register', ['data' => $user], function ($message) use ($user) {
                 $message->from(env('APP_EMAIL'), env('APP_NAME') . 'CRM');
                 $message->to($user->email, $user->name)->subject('帳號註冊成功');
             });
 
-            $this->res = array(
-                'bool' => TRUE,
-                'message' => 'success!',
-            );
+            $this->res['bool'] = true;
+            $this->res['message'] = 'success!';
         } else {
             $this->res['message'] = 'fail!';
         }
@@ -182,7 +166,7 @@ class UserController extends ApiController {
      * @param  int  $id
      * @return Response
      */
-    public function update($id, $data = FALSE) {
+    public function update($id, $data = false) {
         $data = $data ? $data : Input::all();
         $isProfile = isset($data['isProfile']);
         unset($data['isProfile']);
@@ -209,12 +193,12 @@ class UserController extends ApiController {
                 }
             }
 
-            $this->res = array(
-                'bool' => TRUE,
+            $this->res = [
+                'bool' => true,
                 'message' => 'success!',
                 'data' => User::with('files')->where('id', $id)->get(),
                 'isProfile' => $isProfile,
-            );
+            ];
         } else {
             $this->res['message'] = 'fail!';
         }
